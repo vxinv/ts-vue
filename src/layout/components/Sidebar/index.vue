@@ -29,6 +29,8 @@ import { PermissionModule } from "@/store/modules/permission";
 import { SettingsModule } from "@/store/modules/settings";
 import variables from "@/styles/_variables.scss";
 
+//https://www.jianshu.com/p/558a10072fc4
+
 @Component({
   name: "SideBar",
   components: {
