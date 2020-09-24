@@ -34,8 +34,10 @@
 <script lang="ts">
 import "echarts/theme/macarons.js"; // Theme used in BarChart, LineChart, PieChart and RadarChart
 import { Component, Vue } from "vue-property-decorator";
-import LineChart, { ILineChartData } from "./components/LineChart.vue";
+import LineChart from "./components/LineChart.vue";
 import BarChart from "./components/BarChart.vue";
+import {ILineChartData} from "@/views/dashboard/admin/components/LineChart.vue";
+
 
 // just for mock, should get from server
 const lineChartData: { [type: string]: ILineChartData } = {

@@ -142,7 +142,7 @@ export default class extends Vue {
         // Just to simulate the time of the request
         setTimeout(() => {
           this.loading = false;
-        }, 0.5 * 1000);
+        }, 0.5 * 10);
       } else {
         return false;
       }
