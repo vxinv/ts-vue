@@ -217,6 +217,39 @@ export const asyncRoutes: RouteConfig[] = [
                     icon: "user",
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
+            },
+            {
+                path: "propsTest",
+                component: () =>
+                    import( "@/views/my-test/manager/PropsPage.vue"),
+                name: "propsTest",
+                meta: {
+                    title: "propsTest",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
+            },
+            {
+                path: "emitTest",
+                component: () =>
+                    import( "@/views/my-test/manager/EmitPage.vue"),
+                name: "emitTest",
+                meta: {
+                    title: "emitTest",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
+            },
+            {
+                path: "refTest",
+                component: () =>
+                    import( "@/views/my-test/manager/RefPage.vue"),
+                name: "emitTest",
+                meta: {
+                    title: "refTest",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
             }
         ]
     },

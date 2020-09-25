@@ -68,10 +68,10 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Route } from "vue-router";
-import { Dictionary } from "vuex";
 import { Form as ElForm, Input } from "element-ui";
 import { UserModule } from "@/store/modules/user";
 import { isValidUsername } from "@/utils/validate";
+import { Dictionary } from 'vue-router/types/router';
 @Component({
   name: "Login",
 })
@@ -120,6 +120,7 @@ export default class extends Vue {
       (this.$refs.password as Input).focus();
     }
   }
+  
   private showPwd() {
     if (this.passwordType === "password") {
       this.passwordType = "";
