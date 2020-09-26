@@ -74,7 +74,10 @@ class User extends VuexModule implements IUserState {
     // 登录接口，拿到token
     let { username, password } = userInfo;
     username = username.trim();
-    const { data } = await login({ username, password });
+    const  data = {
+      accessToken:"admin_token"
+    }
+        //await login({ username, password });
     setToken(data.accessToken);
     this.SET_TOKEN(data.accessToken);
   }
@@ -89,12 +92,12 @@ class User extends VuexModule implements IUserState {
 
   @Action
   public async GetUserInfo() {
-    // 获取用户信息
+   /* // 获取用户信息
     if (this.token === "") {
       throw Error("GetUserInfo: token is undefined!");
     }
     const { data } = await getUserInfo({
-      /* Your params here */
+      /!* Your params here *!/
     });
     console.log("用户信息", data);
     if (!data) {
@@ -105,11 +108,11 @@ class User extends VuexModule implements IUserState {
     // roles must be a non-empty array
     if (!roles || roles.length <= 0) {
       throw Error("GetUserInfo: roles must be a non-null array!");
-    }
-    this.SET_ROLES(roles);
-    this.SET_NAME(name);
-    this.SET_AVATAR(avatar);
-    this.SET_INTRODUCTION(introduction);
+    }*/
+    this.SET_ROLES(["admin"]);
+    this.SET_NAME("lixin");
+    this.SET_AVATAR("");
+    this.SET_INTRODUCTION("");
   }
 
   @Action

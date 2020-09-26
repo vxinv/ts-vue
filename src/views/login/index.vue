@@ -136,6 +136,7 @@ export default class extends Vue {
       if (valid) {
         this.loading = true;
         await UserModule.Login(this.loginForm);
+
         this.$router.push({
           path: this.redirect || "/",
           query: this.otherQuery,

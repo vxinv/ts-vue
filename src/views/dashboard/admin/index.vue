@@ -67,7 +67,7 @@ const lineChartData: { [type: string]: ILineChartData } = {
   }
 })
 export default class extends Vue {
-  private lineChartData = lineChartData.newVisitis;
+  private lineChartData = lineChartData.purchases;
 }
 </script>
 

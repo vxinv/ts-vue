@@ -13,6 +13,7 @@ const animationDuration = 6000;
 @Component({
   name: "BarChart"
 })
+
 export default class extends mixins(ResizeMixin) {
   @Prop({ default: "chart" }) private className!: string;
   @Prop({ default: "100%" }) private width!: string;

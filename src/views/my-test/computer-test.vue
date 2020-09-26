@@ -3,6 +3,13 @@
         <p>Original message: "{{ message }}"</p>
         <p>Computed reversed message: "{{ reverseMessgae }}"</p>
         <el-button @click="changeMessage"> 改变MESSAGE </el-button>
+
+        <div ref="hello">
+            <p>hello world</p>
+        </div>
+
+        <el-button @click="testRefAndEl"> 测试ref el </el-button>
+
     </div>
 </template>
 
@@ -43,6 +50,7 @@
         public changeMessage(): void {
             this.message = "lixin"
         }
+
 
 
     }

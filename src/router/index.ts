@@ -40,12 +40,7 @@ export const constantRoutes: RouteConfig[] = [
             import(/* webpackChunkName: "login" */ "@/views/login/index.vue"),
         meta: {hidden: true}
     },
-    {
-        path: "/404",
-        component: () =>
-            import(/* webpackChunkName: "404" */ "@/views/error-page/404.vue"),
-        meta: {hidden: true}
-    },
+
     {
         path: "/",
         component: Layout,
@@ -65,6 +60,12 @@ export const constantRoutes: RouteConfig[] = [
                 }
             }
         ]
+    },
+    {
+        path: "/404",
+        component: () =>
+            import(/* webpackChunkName: "404" */ "@/views/error-page/404.vue"),
+        meta: {hidden: true}
     },
     {
         path: "/guide",
@@ -168,7 +169,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
             title: "permission",
             icon: "lock",
-            roles: ["admin", "editor"], // you can set roles in root nav
+            roles: ["admin"], // you can set roles in root nav
             alwaysShow: true // will always show the root menu
         },
         children: [
@@ -180,7 +181,7 @@ export const asyncRoutes: RouteConfig[] = [
                 meta: {
                     title: "account",
                     icon: "user",
-                    roles: ["admin"] // or you can only set roles in sub nav
+                    roles: ["admin"], // you can set roles in root nav
                 }
             },
             {
@@ -190,7 +191,9 @@ export const asyncRoutes: RouteConfig[] = [
                 name: "Setting",
                 meta: {
                     title: "setting",
-                    icon: "setting"
+                    icon: "setting",
+                    roles: ["admin"], // you can set roles in root nav
+
                 }
             }
         ]
@@ -203,7 +206,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
             title: "myTest",
             icon: "lock",
-            roles: ["admin", "editor"], // you can set roles in root nav
+            roles: ["admin"], // you can set roles in root nav
             alwaysShow: true // will always show the root menu
         },
         children: [

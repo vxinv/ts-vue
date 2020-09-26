@@ -28,6 +28,7 @@
         }
 
         mounted() {
+            console.log("LineChart=====>")
             this.$nextTick(() => {
                 this.initChart();
             });

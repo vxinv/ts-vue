@@ -2,7 +2,7 @@ const path = require("path");
 const name = "TS-VUE";
 const sourceMap = process.env.NODE_ENV === "development";
 
-const devServerPort = 9527;
+const devServerPort = 8092;
 const mockServerPort = 9528;
 
 module.exports = {
@@ -14,34 +14,7 @@ module.exports = {
     // it can be accessed in index.html to inject the correct title.
     config.set("name", name);
   },
-  // configureWebpack: config => {
-  //   if (process.env.NODE_ENV === "production") {
-  //     // 为生产环境修改配置...
-  //     config.mode = "production";
-  //   } else {
-  //     // 为开发环境修改配置...
-  //     config.mode = "development";
-  //   }
 
-  //   Object.assign(config, {
-  //     // 开发生产共同配置
-  //     resolve: {
-  //       extensions: [".js", ".vue", ".json", ".ts", ".tsx"],
-  //       alias: {
-  //         vue$: "vue/dist/vue.js",
-  //         "@": path.resolve(__dirname, "./src"),
-  //         "@c": path.resolve(__dirname, "./src/components"),
-  //         utils: path.resolve(__dirname, "./src/utils"),
-  //         less: path.resolve(__dirname, "./src/less"),
-  //         views: path.resolve(__dirname, "./src/views"),
-  //         assets: path.resolve(__dirname, "./src/assets"),
-  //         com: path.resolve(__dirname, "./src/components"),
-  //         store: path.resolve(__dirname, "./src/store"),
-  //         mixins: path.resolve(__dirname, "./src/mixins")
-  //       }
-  //     }
-  //   });
-  // },
   productionSourceMap: sourceMap, // 生产环境是否生成 sourceMap 文件
   css: {
     // css相关配置
@@ -62,24 +35,21 @@ module.exports = {
   pwa: {},
   devServer: {
     open: true,
-    compress: true,
-    host: "localhost",
+    progress: true, // 控制台打印进度条
     port: devServerPort,
-    hot: true,
-    proxy:
-      "https://vue-typescript-admin-mock-server.armour.now.sh/mock-api/v1/",
-    // proxy: {
-    //   // 设置代理
-    //   // proxy all requests starting with /api to jsonplaceholder
-    //   [process.env.VUE_APP_BASE_API]: {
-    //     target: `http://localhost:${mockServerPort}/mock-api/v1`,
-    //     changeOrigin: true,
-    //     pathRewite: {
-    //       ["^" + process.env.VUE_APP_BASE_API]: ""
-    //     }
-    //   }
-    // },
-    before: app => {} // 用于在服务器内部所有中间件执行前定义自定义处理程序，即此选项可在本地模拟服务器数据返回。参考https://github.com/lbwa/set/issues/8
+    proxy: {
+
+      // 设置代理
+      // proxy all requests starting with /api to jsonplaceholder
+      ['/stock']: {
+        target: `http://127.0.0.1:8090/`,
+        changeOrigin: true,
+        logLevel: 'debug',
+        pathRewite: {
+          '^/stock': ""
+        }
+      }
+    }
   },
   // 第三方插件配置
   pluginOptions: {

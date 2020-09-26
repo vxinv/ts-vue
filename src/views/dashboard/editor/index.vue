@@ -49,6 +49,8 @@ export default class extends Vue {
     return UserModule.avatar;
   }
 
+
+
   get roles() {
     return UserModule.roles;
   }

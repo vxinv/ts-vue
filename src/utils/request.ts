@@ -2,18 +2,17 @@ import axios from "axios";
 import { Message, MessageBox } from "element-ui";
 import { UserModule } from "@/store/modules/user";
 
-axios.defaults.headers = {
-  "Content-Type": "application/json;charset=utf8"
-  // token: Cookies.get("system_token") || ""
-};
 
-axios.defaults.baseURL = process.env.VUE_APP_BASE_API
-  ? process.env.VUE_APP_BASE_API
-  : "";
-// console.log("process.env.VUE_APP_API", process.env.VUE_APP_API);
+
+const  service = axios.create({
+  baseURL: "stock", // url = base url + request url
+  timeout: 20000
+  // withCredentials: true // send cookies when cross-domain requests
+})
+
 
 // 请求拦截器
-axios.interceptors.request.use(
+service.interceptors.request.use(
   config => {
     // Add X-Access-Token header to every request, you can add other custom headers here
     if (UserModule.token) {
@@ -26,7 +25,7 @@ axios.interceptors.request.use(
   }
 );
 
-axios.interceptors.response.use(
+service.interceptors.response.use(
   response => {
     // Some example codes here:
     // code == 20000: success
@@ -37,7 +36,8 @@ axios.interceptors.response.use(
     // code == 50005: username or password is incorrect
     // You can change this part for your own usage.
     const res = response.data;
-    if (res.code !== 20000) {
+    console.log(res)
+    if (res.code !== 200) {
       Message({
         message: res.message || "Error",
         type: "error",
@@ -93,20 +93,20 @@ export function formateURLOnlyGet(link: string, json: object) {
  * @param {json} json 请求参数
  */
 export function getData(url: string, json: object) {
-  return axios
+  return service
     .get(formateURLOnlyGet(url, json))
     .then(res => res.data)
     .catch(error => error.response);
 }
 
 export function postData(url: string, json?: object) {
-  return axios
+  return service
     .post(url, json)
     .then(res => res.data)
     .catch(error => error.response);
 }
 export function deleteData(url: string, json: object) {
-  return axios({
+  return service({
     url: formateURLOnlyGet(url, json),
     method: "delete"
     // data: json
@@ -115,7 +115,7 @@ export function deleteData(url: string, json: object) {
     .catch(error => error.response);
 }
 export function deleteJSON(url: string, json: object) {
-  return axios({
+  return service({
     url: url,
     method: "delete",
     data: json
@@ -124,7 +124,7 @@ export function deleteJSON(url: string, json: object) {
     .catch(error => error.response);
 }
 export function putData(url: string, json: object) {
-  return axios({
+  return service({
     url,
     method: "put",
     data: json
@@ -134,7 +134,7 @@ export function putData(url: string, json: object) {
 }
 
 export function downloadFile(url: string, json: object) {
-  return axios({
+  return service({
     url,
     method: "post",
     data: json,

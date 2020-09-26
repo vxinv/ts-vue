@@ -31,7 +31,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
           console.log("角色", roles);
 
           const accessedRoutes: any = await PermissionModule.GenerateRoutes(
-            roles
+            ["admin"]
           );
           // Dynamically add accessible routes
           router.addRoutes(accessedRoutes);

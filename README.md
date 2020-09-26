@@ -1,4 +1,4 @@
-# ts-vue
+ # ts-vue
 
 <p align="center">
   <a href="https://github.com/vuejs/vue">

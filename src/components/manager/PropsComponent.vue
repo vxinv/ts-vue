@@ -14,6 +14,7 @@
 
     @Component
     export default class PropComponent extends Vue{
+
         @Prop({})private color: any;
         @Prop() readonly name!: string | undefined;
         @Prop({default: 30, type: Number}) private age!: number;

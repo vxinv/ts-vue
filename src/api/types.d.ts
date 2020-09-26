@@ -4,3 +4,8 @@ export interface IArticleData {
   timestamp: string | number;
   author: string;
 }
+
+export interface Person {
+  name:string;
+  age:number;
+}

@@ -6,6 +6,8 @@
     <button @click="getRef('com')">操作'RefComponent'的ref</button><br/><br/>
     <button ref="aButton" style="padding:20px;">花真美</button><br/>
 
+    <el-button type="primary" @click="testNet">测试网络</el-button>
+
     <br/><hr/><br/>
     <RefComponent name="RefComponent组件" ref="RefComponent"></RefComponent><br/>
     msg:{{msg}}
@@ -15,18 +17,29 @@
 <script lang="ts">
 import { Vue, Component, Ref } from 'vue-property-decorator';
 import RefComponent from "@/components/manager/RefComponent.vue";
+import {getPerson} from "@/api/test";
+import {Person} from "@/api/types";
+import {getUsers} from "@/api/users";
 
 
 @Component({
   components: { RefComponent },
 })
 export default class RefPage extends Vue {
+
   // @Ref() readonly RefComponent!: RefComponent;
-  @Ref('RefComponent') readonly RefC!: RefComponent;
+  @Ref('RefComponent') readonly  RefC!: RefComponent;
 
   @Ref('aButton') readonly ref!: HTMLButtonElement;
 
   private msg = '';
+  
+
+  async testNet() {
+    const {data } = await getPerson();
+    console.log(data)
+
+  }
 
   getRef(type: string) {
     if (type === 'btn') {
@@ -36,7 +49,7 @@ export default class RefPage extends Vue {
     }
     if (type === 'com') {
       console.log(this.RefC);
-      this.msg = this.RefC.getname('ddd');
+      this.msg = (this.RefC as any).getname('ddd');
     }
   }
   // @Ref('aButton') readonly button!: HTMLButtonElement
