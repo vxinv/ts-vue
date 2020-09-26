@@ -253,6 +253,28 @@ export const asyncRoutes: RouteConfig[] = [
                     icon: "user",
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
+            },
+            {
+                path: "edit",
+                component: () =>
+                    import( "@/views/my-test/editor/myedit.vue"),
+                name: "emitTest",
+                meta: {
+                    title: "编辑器",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
+            },
+            {
+                path: "TESTV-BIND",
+                component: () =>
+                    import( "@/views/my-test/manager/testVbind.vue"),
+                name: "TESTV-BIND",
+                meta: {
+                    title: "TESTV-BIND",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
             }
         ]
     },

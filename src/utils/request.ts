@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Message, MessageBox } from "element-ui";
 import { UserModule } from "@/store/modules/user";
+import {Person} from "@/api/types";
 
 
 

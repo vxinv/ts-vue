@@ -114,11 +114,18 @@ export default class extends Vue {
     }
   }
   mounted() {
-    if (this.loginForm.username === "") {
+    // 初始化完毕 直接登陆
+    UserModule.Login(this.loginForm);
+
+    this.$router.push({
+      path: this.redirect || "/",
+      query: this.otherQuery,
+    });
+   /* if (this.loginForm.username === "") {
       (this.$refs.username as Input).focus();
     } else if (this.loginForm.password === "") {
       (this.$refs.password as Input).focus();
-    }
+    }*/
   }
   
   private showPwd() {

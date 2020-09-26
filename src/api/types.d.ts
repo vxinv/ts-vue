@@ -8,4 +8,5 @@ export interface IArticleData {
 export interface Person {
   name:string;
   age:number;
+  hello:string;
 }

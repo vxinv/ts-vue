@@ -63,7 +63,7 @@ export default class PropComponent extends Vue {
   private delEmitClick(p: Person) {}
 
   @Emit("add-to-count") // 如果此处不设置别名字,则默认使用下面的函数命名
-  addToCount(p: Person) { // 此处命名如果有大写字母则需要用横线隔开  @add-to-count
+  addToCount(p: Person):any { // 此处命名如果有大写字母则需要用横线隔开  @add-to-count
      return this.persons[1];
     // 此处不return,则会默认使用括号里的参数p;
   }
