@@ -15,7 +15,7 @@
 
 <script lang = 'ts'>
     import {Component, Vue, Watch} from "vue-property-decorator";
-    import {Tree as ElTree} from "element-ui/types/element-ui";
+    import {genUpToken} from "@/utils/qiniuToken";
 
 
     @Component({
@@ -51,6 +51,10 @@
             this.message = "lixin"
         }
 
+        created() {
+            let policy = {};
+            console.log("token========>" + genUpToken("qEjtRsk220SrirJdrxY6UxBpFW-sbRaLOGzscjT1", "qEjtRsk220SrirJdrxY6UxBpFW-sbRaLOGzscjT1", policy))
+        }
 
 
     }
