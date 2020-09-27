@@ -18,7 +18,6 @@
 <script lang="ts">
   import {Vue, Component, Ref, Watch} from 'vue-property-decorator';
 import RefComponent from "@/components/manager/RefComponent.vue";
-import {getPerson} from "@/api/test";
 import {Person} from "@/api/types";
 import {getUsers} from "@/api/users";
   import {UserModule} from "@/store/modules/user";
@@ -37,13 +36,13 @@ export default class RefPage extends Vue {
   private msg = '';
 
   netMsg = '';
-  
+
 
   async testNet() {
-    const { data } = await getPerson();
+   /* const { data } = await getPerson();
     let person = (data as Person)
 
-    this.netMsg += person.name
+    this.netMsg += person.name*/
 
   }
 
