@@ -1,22 +1,35 @@
 <template>
 
-    <el-upload
-            class="upload-demo"
-            ref="upload"
-            action="http://upload.qiniup.com/"
-            :http-request="uploadFile"
-            :on-success="handleSuccess"
-            :on-error="handleErrors"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :file-list="fileList"
-            :headers="headers"
-            drag>
+    <el-row style="margin-top: 20px">
+        <el-col :offset="1" :span="8">
+            <div class="grid-content bg-purple"></div>
+            <el-upload
+                    :file-list="fileList"
+                    :headers="headers"
+                    :http-request="uploadFile"
+                    :on-error="handleErrors"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :on-success="handleSuccess"
+                    action
+                    class="upload-demo"
+                    drag
+                    multiple
+                    ref="upload">
 
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-    </el-upload>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+
+            </el-upload>
+
+        </el-col>
+
+        <el-col :span='8'>
+            <el-progress :percentage="percentageNum" type="circle"></el-progress>
+        </el-col>
+        <a href='http://www.w3school.com.cn'>HELLO</a>
+    </el-row>
+
 
 </template>
 <script lang='ts'>
@@ -39,20 +52,8 @@
             // "Access-Control-Allow-Origin": "*"
         }
 
-        fileList = [{
-            name: 'food.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        },
-            {
-                name: 'food2.jpeg',
-                url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-            }]
-
-        actionPath = "https://upload.qiniup.com"
-        submitUpload() {
-            (this.$refs.upload as any).submit();
-        }
-
+        fileList = []
+        percentageNum: number = 0
 
 
         handleRemove(file: any, fileList: any) {
@@ -65,7 +66,7 @@
 
         // 上传成功
         handleSuccess(response: any, file: File, fileList: File[]) {
-            this.$message.success({ message: '上传成功', duration: 0 })
+            this.$message.success({message: '上传成功', duration: 4, showClose: true})
         }
         // 上传失败
         handleErrors(err: any, file: File, fileList: File[]) {
@@ -84,15 +85,14 @@
         }*/
 
         uploadFile(param: any) {
+            let that = this;
             // file就是当前添加的文件
             const _file = param.file as File
             console.log(param)
-            // FormData 对象
-            // 因人而异，自行解决
             const putExtra = {
                     fname: _file.name,
                     params: {},
-                    mimeType: null
+                    mimeType: _file.type
                 },
                 //       fname: string，文件原文件名
                 // params: object，用来放置自定义变量
@@ -101,29 +101,22 @@
                     useCdnDomain: true,
                     region: qiniu.region.z0
                 }
-            console.log("upload==================>")
             let next = (next: UploadProgress) => {
-                console.log(next)
+                that.percentageNum = Number(next.total.percent.toFixed(0))
             };
             let error = (error: CustomError) => {
                 console.log(error)
             }
             let complete = (complete: UploadCompleteData) => {
-                console.log(complete)
+                that.$message('上传成功')
+                setTimeout(() => {
+                    that.percentageNum = 0
+                }, 1000)
             }
             let observable = qiniu.upload(_file, _file.name, this.token, putExtra, config);
 
             observable.subscribe(next, null, complete);
-            /*switch (this.command) {
-                case 'importDeviceByExcel':
-                    //this.handleImportDeviceByExcel(form)
-                    break
-                case 'batchChangeGroupAndLocation':
-                    // this.handleBatchChangeGroupAndLocation(form)
-                    break
-                default:
-                    break
-            }*/
+
         }
 
         created() {
@@ -137,8 +130,6 @@
             policy.deadline = deadline;
             token = genUpToken(AK, SK, policy);
             this.token = token;
-
-            console.log("token========>" + token)
         }
 
     }

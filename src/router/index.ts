@@ -286,7 +286,18 @@ export const asyncRoutes: RouteConfig[] = [
                     icon: "user",
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
+            }, {
+                path: "search",
+                component: () =>
+                    import( "@/views/my-test/manager/search/search.vue"),
+                name: "upload",
+                meta: {
+                    title: "搜索",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
             }
+
         ]
     },
     {
