@@ -128,7 +128,7 @@
 
         created() {
             let token;
-            let policy = {};
+            let policy: any = {};
             let bucketName = 'myone';
             let AK = "qEjtRsk220SrirJdrxY6UxBpFW-sbRaLOGzscjT1";
             let SK = "CTLSJV4Hwe8Xq6gJaUzotYWe5qBv8qly3tWlnxnA";
