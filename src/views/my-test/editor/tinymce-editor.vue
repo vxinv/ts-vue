@@ -83,9 +83,9 @@
             height: 300,
             plugins: this.plugins,
             toolbar: this.toolbar,
-            branding: true,
             paste_data_images: true,
             menubar: false,
+            branding: false,
             codesample_languages: [
                 {text: 'HTML/XML', value: 'markup'},
                 {text: 'JavaScript', value: 'javascript'},
