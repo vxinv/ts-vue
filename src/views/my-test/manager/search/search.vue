@@ -3,6 +3,7 @@
         <el-col :offset="7" :span="10" class="search_input" style="margin-top: 50px">
             <el-input
                     placeholder="请输入内容"
+                    clearable
                     v-model="input">
                 <i class="el-input__icon el-icon-search" slot="prefix"></i>
             </el-input>

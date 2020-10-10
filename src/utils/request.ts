@@ -1,11 +1,9 @@
 import axios from "axios";
-import { Message, MessageBox } from "element-ui";
-import { UserModule } from "@/store/modules/user";
-import {Person} from "@/api/types";
+import {Message, MessageBox} from "element-ui";
+import {UserModule} from "@/store/modules/user";
 
 
-
-const  service = axios.create({
+const service = axios.create({
   baseURL: "stock", // url = base url + request url
   timeout: 20000
   // withCredentials: true // send cookies when cross-domain requests
@@ -73,6 +71,7 @@ service.interceptors.response.use(
   }
 );
 
+
 export function formateURLOnlyGet(link: string, json: object) {
   let url = link;
   var data = Object.entries(json);
@@ -99,6 +98,7 @@ export function getData(url: string, json: object) {
     .then(res => res.data)
     .catch(error => error.response);
 }
+
 
 export function postData(url: string, json?: object) {
   return service

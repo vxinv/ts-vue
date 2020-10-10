@@ -14,19 +14,17 @@
 
 
 <script lang="ts">
-    import {Vue, Component, Prop, Watch, Ref} from 'vue-property-decorator';
+    import {Component, Ref, Vue} from 'vue-property-decorator';
     import TinymceEditor from "./tinymce-editor.vue";
-    import RefComponent from "@/components/manager/RefComponent.vue";
-    import Str = echarts.EChartOption.Tooltip.Position.Str;
 
     @Component({
         components: {TinymceEditor}
     })
     export default class Myedit extends Vue{
 
-        @Ref('editor') readonly  RefC!: TinymceEditor;
+        @Ref('editor') readonly editor!: TinymceEditor;
 
-        msg:string = 'Welcome to Use Tinymce Editor'
+        msg: string = '请输入内容'
 
         disabled:boolean =  false
 
@@ -37,7 +35,7 @@
         }
         // 清空内容
         clear () {
-            console.log(this.RefC)
+            console.log(this.msg)
         }
         // 打印输入的内容
         consoleInput(newInput: string){

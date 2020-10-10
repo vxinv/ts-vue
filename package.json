@@ -29,7 +29,7 @@
     "path-to-regexp": "^3.0.0",
     "qiniu-js": "^3.1.1",
     "screenfull": "^5.0.0",
-    "tinymce": "^5.4.2",
+    "tinymce": "^5.5.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",

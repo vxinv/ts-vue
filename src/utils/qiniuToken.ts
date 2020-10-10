@@ -168,6 +168,19 @@ var genUpToken = function (accessKey: string, secretKey: string, putPolicy: any)
     var upload_token = accessKey + ":" + safe64(encoded_signed) + ":" + encoded;
     return upload_token;
 };
+
+var geneToken = function (): string {
+    let token;
+    let policy: any = {};
+    let bucketName = 'myone';
+    let AK = "qEjtRsk220SrirJdrxY6UxBpFW-sbRaLOGzscjT1";
+    let SK = "CTLSJV4Hwe8Xq6gJaUzotYWe5qBv8qly3tWlnxnA";
+    let deadline = Math.round(new Date().getTime() / 1000) + 3600;
+    policy.scope = "myone";
+    policy.deadline = deadline;
+    return genUpToken(AK, SK, policy);
+}
+
 export {
-    genUpToken
+    genUpToken, geneToken
 }

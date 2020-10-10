@@ -2,9 +2,16 @@ declare module "*.vue" {
     import Vue from "vue";
     export default Vue;
 }
-declare module 'tinymce/tinymce';
+
 
 declare module 'crypto-js'
+
+interface Window {
+    webkitURL?: typeof URL
+    mozURL?: typeof URL
+    ActiveXObject?: any
+}
+
 // 声明文件(*.d.ts)
 // 参考https://juejin.im/post/5c7f3ee8f265da2de04adff6
 

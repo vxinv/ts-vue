@@ -1,6 +1,7 @@
 <template>
     <div class="tinymce-editor">
         <editor v-model="myValue"
+                ref="myEditor"
                 :init="init"
                 :disabled="disabled"
                 @onClick="onClick">
@@ -9,23 +10,27 @@
 </template>
 <script lang="ts">
 
-    import {Vue, Component, Prop, Watch, Emit} from 'vue-property-decorator';
-    import tinymce from 'tinymce/tinymce';
+    import {Component, Prop, Ref, Vue, Watch} from 'vue-property-decorator';
+    import tinymce, {Editor as MyEdit, UploadResult} from 'tinymce';
     import Editor from '@tinymce/tinymce-vue';
     import 'tinymce/themes/silver';
     import 'tinymce/icons/default/icons.min.js'
-    import 'tinymce/plugins/image'// 插入上传图片插件
-    import 'tinymce/plugins/media'// 插入视频插件
-    import 'tinymce/plugins/table'// 插入表格插件
-    import 'tinymce/plugins/lists'// 列表插件
+    import 'tinymce/plugins/image' // 插入上传图片插件
+    import 'tinymce/plugins/media' // 插入视频插件
+    import 'tinymce/plugins/table' // 插入表格插件
+    import 'tinymce/plugins/lists' // 列表插件
     import 'tinymce/plugins/wordcount'
     import 'tinymce/plugins/fullscreen'
     import 'tinymce/plugins/code'
     import 'tinymce/plugins/charmap'
     import 'tinymce/plugins/searchreplace'
     import 'tinymce/plugins/insertdatetime'
-    import { PropType } from "vue"
+    import 'tinymce/plugins/codesample'
+    import {geneToken} from "@/utils/qiniuToken";
 
+    import {token} from "morgan";
+    import {guid} from "@/utils/random";
+    import axios from "axios";
 
 
     // 编辑器插件plugins
@@ -33,10 +38,10 @@
     // 字数统计插件
     @Component(
         {
-            components: { Editor }
+            components: {Editor}
         }
     )
-    export default  class  TinymceEditor extends Vue {
+    export default class TinymceEditor extends Vue {
 
         @Prop({default: ''})
         value: string;
@@ -50,19 +55,23 @@
 
         @Prop({
             type: Array, //表示是一个string类型的数组
-            default(){
-                return ["link image media table lists fullscreen code charmap insertdatetime searchreplace"]
-            }})
-        readonly  plugins!: string[];
+            default() {
+                return ["link image media table lists fullscreen code charmap insertdatetime searchreplace codesample"]
+            }
+        })
+        readonly plugins!: string[];
 
         @Prop({
             type: Array,
             default() {
-                return ["undo redo | fullscreen code charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent | superscript subscript | removeformat |"]
-            }})
+                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent | superscript subscript | removeformat |"]
+            }
+        })
         readonly toolbar: string[];
 
         myValue = this.value;
+
+        @Ref("myEditor") myEdit: MyEdit;
 
         init = {
             language_url: `${this.baseUrl}/tinymce/langs/zh_CN.js`,
@@ -74,18 +83,78 @@
             height: 300,
             plugins: this.plugins,
             toolbar: this.toolbar,
-            branding: false,
+            branding: true,
+            paste_data_images: true,
             menubar: false,
-            // 此处为图片上传处理函数，这个直接用了base64的图片形式上传图片，
-            // 如需ajax上传可参考https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_handler
-            images_upload_handler: (blobInfo: any, success: any, failure: any) => {
-                const img = 'data:image/jpeg;base64,' + blobInfo.base64()
-                success(img)
-            }
+            codesample_languages: [
+                {text: 'HTML/XML', value: 'markup'},
+                {text: 'JavaScript', value: 'javascript'},
+                {text: 'CSS', value: 'css'},
+                {text: 'Java', value: 'java'},
+                {text: 'C++', value: 'cpp'},
+            ],
+            paste_preprocess: (plugin: any, args: any) => {
+                console.log("==========>" + args)
+            },
+            images_upload_handler: (blobInfo, success, failure) => {
+                console.log(blobInfo)
+                let formdata = new FormData();
+                //console.log(blobInfo)
+                formdata.append("file", blobInfo.blob());
+                formdata.append("key", "lixin" + guid() + ".png");
+
+                formdata.append("token", geneToken()); //上传凭证
+                //console.log(blobInfo.blob());
+                let data = this.uploadImage(formdata, success);
+                console.log(data)
+            },
+
+            init_instance_callback: (editor) => {
+
+                /*if (_this.value) {
+                    editor.setContent(_this.value)
+                }
+                _this.hasInit = true
+                editor.on('NodeChange Change KeyUp SetContent', () => {
+                    this.hasChange = true
+                    // const val = editor.getContent().replace(/<p><img\s?src="data.*?<\/p>/g, '')
+                    this.$emit('input', editor.getContent())
+                })*/
+                this.myEdit = editor;
+                editor.on('paste', () => {
+                    setTimeout(
+                        () => {
+                            this.myEdit.uploadImages((success: UploadResult[]) => {
+
+                            })
+                        }, 10
+                    )
+
+                })
+
+            },
+
         }
 
+        uploadImage(form: FormData, success: Function): any {
+            axios
+                .post('http://upload.qiniup.com/', form)
+                .then((res) => {
+                    console.log(res)
+                    success('http://one.ijavascript.club/' + res.data.key);
+                    return res.data
+                })
+                .catch(
+                    error => {
+                        error.response
+                        return error
+                    }
+                )
+        }
+
+
         mounted() {
-            tinymce.init({})
+            tinymce.init(this.init)
         }
 
         onClick(event: MessageEvent) {
@@ -101,7 +170,7 @@
     }
 </script>
 <style lang="css">
-    .tinymce-editor{
+    .tinymce-editor {
         margin-right: 30px;
     }
 </style>

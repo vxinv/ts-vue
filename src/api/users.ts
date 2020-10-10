@@ -1,4 +1,4 @@
-import { getData, postData } from "@/utils/request";
+import {getData, postData} from "@/utils/request";
 
 export const getUsers = (params: any) => getData("/users", params);
 

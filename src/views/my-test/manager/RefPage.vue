@@ -16,20 +16,17 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Ref, Watch} from 'vue-property-decorator';
-import RefComponent from "@/components/manager/RefComponent.vue";
-import {Person} from "@/api/types";
-import {getUsers} from "@/api/users";
-  import {UserModule} from "@/store/modules/user";
+  import {Component, Ref, Vue, Watch} from 'vue-property-decorator';
+  import RefComponent from "@/components/manager/RefComponent.vue";
 
 
-@Component({
-  components: { RefComponent },
-})
-export default class RefPage extends Vue {
+  @Component({
+    components: {RefComponent},
+  })
+  export default class RefPage extends Vue {
 
-  // @Ref() readonly RefComponent!: RefComponent;
-  @Ref('RefComponent') readonly  RefC!: RefComponent;
+    // @Ref() readonly RefComponent!: RefComponent;
+    @Ref('RefComponent') readonly RefC!: RefComponent;
 
   @Ref('aButton') readonly ref!: HTMLButtonElement;
 
@@ -39,10 +36,10 @@ export default class RefPage extends Vue {
 
 
   async testNet() {
-   /* const { data } = await getPerson();
-    let person = (data as Person)
+    /*    const { data } = await getPerson();
+        let person = (data as Person)
 
-    this.netMsg += person.name*/
+        this.netMsg += person.name*/
 
   }
 
