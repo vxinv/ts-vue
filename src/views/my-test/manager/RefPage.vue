@@ -26,7 +26,7 @@
   export default class RefPage extends Vue {
 
     // @Ref() readonly RefComponent!: RefComponent;
-    @Ref('RefComponent') readonly RefC!: RefComponent;
+  @Ref('RefComponent') readonly RefC!: RefComponent;
 
   @Ref('aButton') readonly ref!: HTMLButtonElement;
 

@@ -12,6 +12,7 @@ interface Window {
     ActiveXObject?: any
 }
 
+
 // 声明文件(*.d.ts)
 // 参考https://juejin.im/post/5c7f3ee8f265da2de04adff6
 

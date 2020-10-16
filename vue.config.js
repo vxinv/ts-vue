@@ -41,12 +41,12 @@ module.exports = {
 
       // 设置代理
       // proxy all requests starting with /api to jsonplaceholder
-      ['/stock']: {
-        target: `http://127.0.0.1:8090/`,
-        changeOrigin: true,
-        pathRewite: {
-          '^/stock': ""
-        }
+      ['/']: {
+          target: `http://127.0.0.1:8090/`,
+          changeOrigin: true,
+          pathRewite: {
+              '^/': ""
+          }
       }
     }
   },

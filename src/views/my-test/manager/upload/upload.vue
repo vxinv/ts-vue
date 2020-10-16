@@ -15,6 +15,7 @@
                     class="upload-demo"
                     drag
                     multiple
+
                     ref="upload">
 
                 <i class="el-icon-upload"></i>

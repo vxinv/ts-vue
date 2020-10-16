@@ -1,4 +1,4 @@
-import {getData} from "@/utils/request";
+import {getData, postData} from "@/utils/request";
 import {IArticleData} from "./types";
 import {genUpToken} from "@/utils/qiniuToken";
 import axios from "axios";
@@ -12,9 +12,14 @@ export const defaultArticleData: IArticleData = {
 
 export const getArticles = (params: any) => getData("/articles", params);
 
-export const getArticle = (id: number, params: any) =>
-    getData(`/articles/${id}`, params);
+export const getArticle = (id: number, params: any) => getData(`/articles/${id}`, params);
 
+export class Article {
+  author: string;
+  content: string;
+}
+
+export const saveArticle = (params: Article) => postData("/saveArticle", params);
 
 export const uploadImageToQiniu = (data: FormData, token: string) => {
 

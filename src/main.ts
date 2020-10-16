@@ -1,6 +1,5 @@
 import Vue from "vue";
 import App from "./App.vue";
-import Component from "vue-class-component";
 import router from "@/router";
 import store from "@/store";
 
@@ -27,6 +26,7 @@ Object.keys(filters).forEach(key => {
 });
 
 Vue.config.productionTip = false;
+
 
 new Vue({
   router,

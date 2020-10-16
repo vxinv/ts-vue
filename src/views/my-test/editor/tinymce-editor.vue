@@ -1,12 +1,14 @@
 <template>
-    <div class="tinymce-editor">
-        <editor v-model="myValue"
-                ref="myEditor"
-                :init="init"
-                :disabled="disabled"
-                @onClick="onClick">
-        </editor>
-    </div>
+    <el-row>
+        <el-col :span="20" offset="2">
+            <editor :disabled="disabled"
+                    :init="init"
+                    @onClick="onClick"
+                    ref="myEditor"
+                    v-model="myValue">
+            </editor>
+        </el-col>
+    </el-row>
 </template>
 <script lang="ts">
 
@@ -69,7 +71,7 @@
         })
         readonly toolbar: string[];
 
-        myValue = this.value;
+        public myValue: string = this.value;
 
         @Ref("myEditor") myEdit: MyEdit;
 
@@ -80,7 +82,7 @@
             content_css: `${this.baseUrl}/tinymce/skins/content/default/content.css`,
             //skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`,
             //content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`,
-            height: 300,
+            height: document.documentElement.clientHeight - 100,
             plugins: this.plugins,
             toolbar: this.toolbar,
             paste_data_images: true,
@@ -110,7 +112,6 @@
             },
 
             init_instance_callback: (editor) => {
-
                 /*if (_this.value) {
                     editor.setContent(_this.value)
                 }
@@ -152,7 +153,6 @@
                 )
         }
 
-
         mounted() {
             tinymce.init(this.init)
         }
@@ -160,7 +160,6 @@
         onClick(event: MessageEvent) {
             this.$emit('onClick', event, tinymce)
         }
-
 
         @Watch('myValue')
         private watchReverseMessgae(newValue: string) {

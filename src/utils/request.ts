@@ -4,7 +4,7 @@ import {UserModule} from "@/store/modules/user";
 
 
 const service = axios.create({
-  baseURL: "stock", // url = base url + request url
+  baseURL: "", // url = base url + request url
   timeout: 20000
   // withCredentials: true // send cookies when cross-domain requests
 })
@@ -106,6 +106,7 @@ export function postData(url: string, json?: object) {
     .then(res => res.data)
     .catch(error => error.response);
 }
+
 export function deleteData(url: string, json: object) {
   return service({
     url: formateURLOnlyGet(url, json),

@@ -296,6 +296,17 @@ export const asyncRoutes: RouteConfig[] = [
                     icon: "user",
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
+            },
+            {
+                path: "articleList",
+                component: () =>
+                    import( "@/views/my-test/manager/table/tableList.vue"),
+                name: "articleList",
+                meta: {
+                    title: "笔记列表",
+                    icon: "user",
+                    roles: ["admin"] // or you can only set roles in sub nav
+                }
             }
 
         ]
