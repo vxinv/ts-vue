@@ -11,20 +11,31 @@ NProgress.configure({ showSpinner: false });
 const whiteList = ["/login"];
 
 router.beforeEach(async (to: Route, _: Route, next: any) => {
+  if (to.path === "/register"){
+    next({ ...to, replace: true });
+    return
+  }
+
   // Start progress bar
   NProgress.start();
 
   // Determine whether the user has logged in
   if (UserModule.token) {
+
     if (to.path === "/login") {
       // If is logged in, redirect to the home page
       next({ path: "/" });
       NProgress.done();
     } else {
+      if (to.path === "/register"){
+        next({ path: "/register" });
+        NProgress.done();
+      }
       // Note: roles must be a object array! such as: ['admin'] or ['developer', 'editor']
       if (UserModule.roles.length === 0) {
         try {
           // Get user info, including roles
+          //throw  new Error("")
           await UserModule.GetUserInfo();
           const roles = UserModule.roles;
           // Generate accessible routes map based on role

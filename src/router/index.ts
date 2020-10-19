@@ -42,6 +42,13 @@ export const constantRoutes: RouteConfig[] = [
     },
 
     {
+        path: "/register",
+        component: () =>
+            import(/* webpackChunkName: "login" */ "@/views/login/register.vue"),
+        meta: {hidden: true}
+    },
+
+    {
         path: "/",
         component: Layout,
         redirect: "/dashboard",
