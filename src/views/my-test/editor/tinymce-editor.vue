@@ -1,14 +1,12 @@
 <template>
-    <el-row>
-        <el-col :span="20" offset="2">
+   <div>
             <editor :disabled="disabled"
                     :init="init"
                     @onClick="onClick"
                     ref="myEditor"
                     v-model="myValue">
             </editor>
-        </el-col>
-    </el-row>
+    </div>
 </template>
 <script lang="ts">
 
@@ -82,7 +80,7 @@
             content_css: `${this.baseUrl}/tinymce/skins/content/default/content.css`,
             //skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`,
             //content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`,
-            height: document.documentElement.clientHeight - 100,
+            height: document.documentElement.clientHeight-60,
             plugins: this.plugins,
             toolbar: this.toolbar,
             paste_data_images: true,
@@ -169,7 +167,7 @@
     }
 </script>
 <style lang="css">
-    .tinymce-editor {
+    /*.tinymce-editor {
         margin-right: 30px;
-    }
+    }*/
 </style>

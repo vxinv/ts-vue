@@ -39,7 +39,7 @@ module.exports = {
     port: devServerPort,
     proxy: {
 
-      // 设置代理
+      // 设置代理2
       // proxy all requests starting with /api to jsonplaceholder
       ['/']: {
           target: `http://127.0.0.1:8090/`,

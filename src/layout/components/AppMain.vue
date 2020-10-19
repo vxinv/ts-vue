@@ -17,6 +17,7 @@ export default class extends Vue {}
 
 <style lang="scss" scoped>
 .app-main {
-  overflow: hidden;
+  height: calc(100vh - 50px);
+  overflow: auto;
 }
 </style>
