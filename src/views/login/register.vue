@@ -1,16 +1,6 @@
 <template>
     <div class="login-container">
-        <el-form :label-position="left" label-width="80px" :model="formLabelAlign">
-            <el-form-item label="名称">
-                <el-input v-model="formLabelAlign.name"></el-input>
-            </el-form-item>
-            <el-form-item label="活动区域">
-                <el-input v-model="formLabelAlign.region"></el-input>
-            </el-form-item>
-            <el-form-item label="活动形式">
-                <el-input v-model="formLabelAlign.type"></el-input>
-            </el-form-item>
-        </el-form>
+        <h3>HELLO  REGISTER</h3>
     </div>
 </template>
 
@@ -22,107 +12,9 @@
     import {isValidUsername} from "@/utils/validate";
     import {Dictionary} from 'vue-router/types/router';
 
-    @Component({
-        name: "Login",
-    })
-    export default class extends Vue {
-        private validateUsername = (rule: any, value: string, callback: Function) => {
-            if (!isValidUsername(value)) {
-                callback(new Error("Please enter the correct user name"));
-            } else {
-                callback();
-            }
-        };
-        private validatePassword = (rule: any, value: string, callback: Function) => {
-            if (value.length < 6) {
-                callback(new Error("The password can not be less than 6 digits"));
-            } else {
-                callback();
-            }
-        };
-        private loginForm = {
-            username: "admin",
-            password: "111111",
-        };
-        private loginRules = {
-            username: [{validator: this.validateUsername, trigger: "blur"}],
-            password: [{validator: this.validatePassword, trigger: "blur"}],
-        };
-        private passwordType = "password";
-        private loading = false;
-        private showDialog = false;
-        private redirect?: string;
-        private otherQuery: Dictionary<string> = {};
+    @Component({})
+    export default class register extends Vue {
 
-        @Watch("$route", {immediate: true})
-        private onRouteChange(route: Route) {
-            // TODO: remove the "as Dictionary<string>" hack after v4 release for vue-router
-            // See https://github.com/vuejs/vue-router/pull/2050 for details
-            const query = route.query as Dictionary<string>;
-            if (query) {
-                this.redirect = query.redirect;
-                this.otherQuery = this.getOtherQuery(query);
-            }
-        }
-
-        mounted() {
-            // 初始化完毕 直接登陆
-            UserModule.Login(this.loginForm);
-
-            this.$router.push({
-                path: this.redirect || "/",
-                query: this.otherQuery,
-            });
-            /* if (this.loginForm.username === "") {
-               (this.$refs.username as Input).focus();
-             } else if (this.loginForm.password === "") {
-               (this.$refs.password as Input).focus();
-             }*/
-        }
-
-        private showPwd() {
-            if (this.passwordType === "password") {
-                this.passwordType = "";
-            } else {
-                this.passwordType = "password";
-            }
-            this.$nextTick(() => {
-                (this.$refs.password as Input).focus();
-            });
-        }
-
-        private handleLogin() {
-            (this.$refs.loginForm as ElForm).validate(async (valid: boolean) => {
-                if (valid) {
-                    this.loading = true;
-                    await UserModule.Login(this.loginForm);
-
-                    this.$router.push({
-                        path: this.redirect || "/",
-                        query: this.otherQuery,
-                    });
-                    // Just to simulate the time of the request
-                    setTimeout(() => {
-                        this.loading = false;
-                    }, 0.5 * 10);
-                } else {
-                    return false;
-                }
-            });
-        }
-
-
-        private getOtherQuery(query: Dictionary<string>) {
-            return Object.keys(query).reduce(
-                (acc, cur) => {
-                    if (cur !== "redirect") {
-                        acc[cur] = query[cur];
-                    }
-                    return acc;
-                },
-                {} as Dictionary<string>
-            );
-        }
     }
 </script>
 
