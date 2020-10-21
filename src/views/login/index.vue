@@ -9,11 +9,10 @@
                 label-position="left"
         >
 
-
             <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon name="user"/>
-        </span>
+                <span class="svg-container">
+                  <svg-icon name="user"/>
+                </span>
                 <el-input
                         ref="username"
                         v-model="loginForm.username"
@@ -173,13 +172,13 @@
                 }
             });
         }
+
         private handleRegister() {
             this.$router.replace({
-                path:  "register",
+                path: "register",
                 query: this.otherQuery,
             });
         }
-
 
 
         private getOtherQuery(query: Dictionary<string>) {

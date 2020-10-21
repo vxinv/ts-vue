@@ -1,7 +1,34 @@
 <template>
-    <div class="login-container">
-        <h3>HELLO  REGISTER</h3>
+    <div class="register-container">
+        <el-form class="register-form"
+                 label-position="left"
+                 label-width="70px"
+                 :model="loginForm">
+            <el-form-item label="名称">
+                <el-input v-model="loginForm.username"> </el-input>
+            </el-form-item>
+            <el-form-item label="密码">
+                <el-input v-model="loginForm.password"></el-input>
+            </el-form-item>
+            <el-form-item label="邮箱">
+                <el-input v-model="loginForm.email"></el-input>
+            </el-form-item>
+
+            <el-button style="margin-left: 30px" type="primary" @click="onSubmit">获取验证码</el-button>
+
+            <el-form-item label="验证码">
+                <el-input v-model="loginForm.code"></el-input>
+            </el-form-item>
+
+            <el-button
+                    type="primary"
+                    style="width:100%;"
+                    @click.native.prevent="handleRegister">注册
+            </el-button>
+        </el-form>
+
     </div>
+
 </template>
 
 <script lang="ts">
@@ -14,58 +41,22 @@
 
     @Component({})
     export default class register extends Vue {
-
-    }
+        onSubmit() {
+            console.log('submit!');
+        }
+        loginForm = {
+            username: '',
+            password: '',
+            email:'',
+            code:''
+        }
+     }
 </script>
 
+
 <style lang="scss">
-    // References: https://www.zhangxinxu.com/wordpress/2018/01/css-caret-color-first-line/
-    @supports (-webkit-mask: none) and (not (cater-color: $loginCursorColor)) {
-        .login-container .el-input {
-            input {
-                color: $loginCursorColor;
-            }
 
-            input::first-line {
-                color: $lightGray;
-            }
-        }
-    }
-
-    .login-container {
-        .el-input {
-            display: inline-block;
-            height: 47px;
-            width: 85%;
-
-            input {
-                height: 47px;
-                background: transparent;
-                border: 0px;
-                border-radius: 0px;
-                padding: 12px 5px 12px 15px;
-                color: $lightGray;
-                caret-color: $loginCursorColor;
-                -webkit-appearance: none;
-
-                &:-webkit-autofill {
-                    box-shadow: 0 0 0px 1000px $loginBg inset !important;
-                    -webkit-text-fill-color: #fff !important;
-                }
-            }
-        }
-
-        .el-form-item {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            color: #454545;
-        }
-    }
-</style>
-
-<style lang="scss" scoped>
-    .login-container {
+    .register-container {
         position: relative;
         height: 100%;
         width: 100%;
@@ -76,59 +67,27 @@
         // background-position: center center;
         // background-repeat: no-repeat;
         // background-attachment: fixed;
-        .login-form {
+        .register-form {
             position: relative;
             width: 520px;
             max-width: 100%;
             padding: 160px 35px 0;
             margin: 0 auto;
             overflow: hidden;
-        }
 
-        .tips {
-            font-size: 14px;
-            color: #fff;
-            margin-bottom: 10px;
-
-            span {
-                &:first-of-type {
-                    margin-right: 16px;
+            .el-form-item{
+                display: inline-block;
+                .el-input{
+                    margin-right: 20px;
+                    .input{
+                        background: #97a8be;
+                    }
                 }
             }
         }
-
-        .svg-container {
-            padding: 6px 5px 6px 15px;
-            color: $darkGray;
-            vertical-align: middle;
-            width: 30px;
-            display: inline-block;
-        }
-
-        .title-container {
-            position: relative;
-
-            .title {
-                font-size: 26px;
-                color: $lightGray;
-                margin: 0px auto 40px auto;
-                text-align: center;
-                font-weight: bold;
-            }
-        }
-
-        .show-pwd {
-            position: absolute;
-            right: 10px;
-            top: 7px;
-            font-size: 16px;
-            color: $darkGray;
-            cursor: pointer;
-            user-select: none;
-        }
     }
 
-    .login-container::before {
+    .register-container::before {
         background-image: url("../../../public/images/ts-vue-login-banner01.jpeg");
         background-size: cover;
         background-position: center center;

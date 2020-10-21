@@ -14,7 +14,6 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
 
   // Start progress bar
   NProgress.start();
-  console.log("to+++++++++>"+to.path)
   // Determine whether the user has logged in
   if (to.path === '/register'){
     next();
