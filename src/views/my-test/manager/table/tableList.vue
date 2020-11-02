@@ -43,27 +43,22 @@
                 <el-table-column
                         align="center"
                         label="日期"
-                        prop="date"
+                        prop="publishTime"
                         width="150">
                 </el-table-column>
                 <el-table-column
                         align="center"
                         label="姓名"
-                        prop="name"
+                        prop="userName"
                         width="150">
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        label="省份"
-                        prop="province"
+                        label="标题"
+                        prop="title"
                         width="150">
                 </el-table-column>
-                <el-table-column
-                        align="center"
-                        label="市区"
-                        prop="city"
-                        width="150">
-                </el-table-column>
+
                 <el-table-column
                         align="center"
                         label="地址">
@@ -84,19 +79,13 @@
                         </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        align="center"
-                        label="邮编"
-                        prop="zip"
-                        width="150">
-                </el-table-column>
+
 
                 <infinite-loading
                         @infinite="infiniteHandler"
                         force-use-infinite-wrapper=".el-table__body-wrapper"
                         slot="append">
                 </infinite-loading>
-
             </el-table>
 
         </div>
@@ -106,54 +95,53 @@
 <script lang='ts'>
     import {Component, Vue} from 'vue-property-decorator';
     import InfiniteLoading from 'vue-infinite-loading';
+    import {getArticleList, GetArticle} from "@/api/articles";
+    import {UserModule} from "@/store/modules/user";
 
     @Component({components: {InfiniteLoading}})
     export default class tableList extends Vue {
-        tableData = [
-            {
-                date: '2016-05-07',
-                name: '王小虎',
-                province: '上海',
-                city: '普陀区',
-                address: '上海市普陀区金沙江路 1518 弄',
-                zip: 200333
-            },
-            {
-                date: '2016-05-03',
-                name: '王小虎',
-                province: '上海',
-                city: '普陀区',
-                address: '上海市普陀区金沙江路 1518 弄',
-                zip: 200333
-            }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                province: '上海',
-                city: '普陀区',
-                address: '上海市普陀区金沙江路 1518 弄',
-                zip: 200333
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                province: '上海',
-                city: '普陀区',
-                address: '上海市普陀区金沙江路 1518 弄',
-                zip: 200333
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                province: '上海',
-                city: '普陀区',
-                address: '上海市普陀区金沙江路 1518 弄',
-                zip: 200333
-            }]
-        input2: string = ''
-        select_scope: string = ''
-        select_time:string=''
-        height: string = ''
+        tableData = [];
+        input2: string = '';
+        select_scope: string = '';
+        select_time:string='';
+        height: string = '';
+        pageNo = 1;
+        pageSize = 10;
+        canGet:boolean = true;
 
         create() {
             this.height = (document.documentElement.clientHeight * 0.8).toString()
+        }
+
+       /* mounted(){
+            this.ArticleList()
+        }
+*/
+        /**
+         * 获取笔记
+         */
+        ArticleList(){
+            if (!this.canGet){
+                return
+            }
+            let getArticle = new GetArticle();
+            getArticle.pageNo = this.pageNo;
+            getArticle.pageSize = this.pageSize;
+            getArticle.userName = UserModule.name;
+            getArticle.timeOrder = 1;
+            getArticleList(getArticle).then(
+                res=>{
+                    if (res.data.hasNextPage){
+                        this.canGet = res.data.hasNextPage;
+                        this.tableData.push(...res.data.list)
+                        this.pageNo++;
+                    }
+                    return
+                },
+                err=>{
+
+                }
+            )
         }
 
         sousuo(){
@@ -161,18 +149,11 @@
         }
 
         infiniteHandler($state) {
-            if (this.tableData.length > 20) {
-                return
-            }
-            this.tableData.push({
-                date: '2016-05-03' + Math.random(),
-                name: '王小虎',
-                province: '上海',
-                city: '普陀区',
-                address: '上海市普陀区金沙江路 1518 弄',
-                zip: 200333
-            })
-            $state.loaded();
+            console.log("触发")
+            setTimeout(() => {
+                this.ArticleList()
+                $state.loaded();
+            }, 2000);
         }
     }
 </script>

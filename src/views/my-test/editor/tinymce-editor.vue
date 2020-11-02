@@ -4,6 +4,7 @@
                     :init="init"
                     @onClick="onClick"
                     ref="myEditor"
+                    :key="tinymceFlag"
                     v-model="myValue">
             </editor>
     </div>
@@ -69,7 +70,9 @@
         })
         readonly toolbar: string[];
 
-        public myValue: string = this.value;
+        public myValue: string = "";
+
+        public tinymceFlag:number = 0;
 
         @Ref("myEditor") myEdit: MyEdit;
 
@@ -151,6 +154,7 @@
                 )
         }
 
+
         mounted() {
             tinymce.init(this.init)
         }
@@ -162,6 +166,10 @@
         @Watch('myValue')
         private watchReverseMessgae(newValue: string) {
             //console.log(newValue)
+        }
+
+        activated () {
+            this.tinymceFlag++
         }
 
     }

@@ -14,9 +14,7 @@
 
         <el-row style="margin-top: 10px;margin-bottom: 10px;" >
             <el-col :span="13" :offset="2" style="padding-right: 20px">
-                <el-input>
-
-                </el-input>
+                <el-input v-model="input" placeholder="笔记标题"></el-input>
             </el-col>
             <el-col :span="7"  >
                 <div style="display: flex;flex-direction: row;justify-content: flex-end">
@@ -45,38 +43,42 @@
     import {Article, saveArticle} from "@/api/articles";
     import th from "element-ui/src/locale/lang/th";
     import fa from "element-ui/src/locale/lang/fa";
+    import {UserModule} from "@/store/modules/user";
 
     @Component({
         components: {TinymceEditor}
     })
     export default class Myedit extends Vue {
         @Ref('editor') editor!: TinymceEditor;
-        msg: string = '请输入内容'
-        disabled: boolean = false
-        infoList = ["每天推送","每周推送","每月发送","艾宾浩斯曲线","仅当天推送"]
-        notify:number
+        msg: string = '请输入内容';
+        disabled: boolean = false;
+        infoList = ["每天推送","每周推送","每月发送","艾宾浩斯曲线","仅当天推送"];
+        notify:number;
+        info:string = "提醒";
+        input=  '';
+        // 清空内容
+        clear() {
+            console.log(this.msg)
+        }
         onClick(e: any, editor: any) {
             console.log('Element clicked')
             console.log(e)
             console.log(editor)
         }
-        info:string = "提醒"
-        // 清空内容
-        clear() {
-            console.log(this.msg)
-        }
         handleCommand(command) {
+            this.notify = command
             this.info=this.infoList[command]
             this.$message('当前笔记按照' + this.infoList[command] +"推送给您");
-            this.notify = command
         }
         publish() {
             let article = new Article();
-            article.author = 'lixin'
+            article.userName = UserModule.name
             article.content = (this.editor as any).myValue;
+            article.notify = this.notify;
+            article.title = this.input;
             let ca = this.checkArticle(article);
             if (!ca.res){
-                this.$message("未成功 "+ca.msg)
+                this.$message("未上传成功 "+ca.msg)
                 return
             }
             saveArticle(article).then((res)=>{
@@ -106,7 +108,15 @@
                     msg :"没有设置提醒"
                 }
             }
-            return true
+            if (article.title==null || article.title == ""){
+                return {
+                    res :false,
+                    msg :"没有填写标题"
+                }
+            }
+            return {
+                res :true
+            }
         }
     }
 

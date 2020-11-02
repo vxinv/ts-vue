@@ -14,14 +14,31 @@ export const getArticles = (params: any) => getData("/articles", params);
 
 export const getArticle = (id: number, params: any) => getData(`/articles/${id}`, params);
 
+/**
+ * 文章的bean
+ */
 export class Article {
-    author: string;
+    userName: string;
     content: string;
     title: string;
     notify: number;
 }
 
+/**
+ * 获取笔记的bean
+ * @param params
+ */
+export class GetArticle{
+    userName:string;
+    pageNo:number;
+    pageSize:number;
+    // 1 -1
+    timeOrder:number;
+}
+
 export const saveArticle = (params: Article) => postData("/saveArticle", params);
+
+export const getArticleList = (params:GetArticle) => postData("/getArticle",params);
 
 export const uploadImageToQiniu = (data: FormData, token: string) => {
 

@@ -247,6 +247,7 @@ export const asyncRoutes: RouteConfig[] = [
                 meta: {
                     title: "emitTest",
                     icon: "user",
+                    keepAlive: true,
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
             },
@@ -269,6 +270,7 @@ export const asyncRoutes: RouteConfig[] = [
                 meta: {
                     title: "编辑器",
                     icon: "user",
+                    keepAlive:true,
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
             },

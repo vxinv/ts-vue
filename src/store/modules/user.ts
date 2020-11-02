@@ -92,12 +92,12 @@ class User extends VuexModule implements IUserState {
 
   @Action
   public async GetUserInfo() {
-    // 获取用户信息
+    /*// 获取用户信息
     if (this.token === "") {
       throw Error("GetUserInfo: token is undefined!");
     }
     const { data } = await getUserInfo({
-      /* Your params here */
+      /!* Your params here *!/
     });
     console.log("用户信息", data);
     if (!data) {
@@ -108,7 +108,7 @@ class User extends VuexModule implements IUserState {
     // roles must be a non-empty array
     if (!roles || roles.length <= 0) {
       throw Error("GetUserInfo: roles must be a non-null array!");
-    }
+    }*/
     this.SET_ROLES(["admin"]);
     this.SET_NAME("lixin");
     this.SET_AVATAR("");

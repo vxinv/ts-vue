@@ -216,6 +216,7 @@
             width: 85%;
 
             input {
+
                 height: 47px;
                 background: transparent;
                 border: 0px;

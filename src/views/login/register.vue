@@ -3,21 +3,23 @@
         <el-form class="register-form"
                  label-position="left"
                  label-width="70px"
-                 :model="loginForm">
+                 :model="registerForm">
             <el-form-item label="名称">
-                <el-input v-model="loginForm.username"> </el-input>
+                <el-input v-model="registerForm.username"> </el-input>
             </el-form-item>
+            <el-button style="margin-left: 30px" type="primary" @click="registerUserName">验证用户名</el-button>
+
             <el-form-item label="密码">
-                <el-input v-model="loginForm.password"></el-input>
+                <el-input v-model="registerForm.password"></el-input>
             </el-form-item>
             <el-form-item label="邮箱">
-                <el-input v-model="loginForm.email"></el-input>
+                <el-input v-model="registerForm.email"></el-input>
             </el-form-item>
 
-            <el-button style="margin-left: 30px" type="primary" @click="onSubmit">获取验证码</el-button>
+            <el-button style="margin-left: 30px" type="primary" @click="getMailCode">获取验证码</el-button>
 
             <el-form-item label="验证码">
-                <el-input v-model="loginForm.code"></el-input>
+                <el-input v-model="registerForm.code"></el-input>
             </el-form-item>
 
             <el-button
@@ -38,17 +40,54 @@
     import {UserModule} from "@/store/modules/user";
     import {isValidUsername} from "@/utils/validate";
     import {Dictionary} from 'vue-router/types/router';
+    import {getCode, registerAll, registerUserName} from "@/api/users";
 
     @Component({})
     export default class register extends Vue {
+
         onSubmit() {
             console.log('submit!');
         }
-        loginForm = {
+
+        registerForm = {
             username: '',
             password: '',
             email:'',
             code:''
+        }
+
+        registerUserName(){
+            registerUserName(this.registerForm).then(
+                res =>{
+                    console.log(res)
+                },
+                err => {
+                    console.log(err)
+                }
+            )
+        }
+
+        getMailCode(){
+            getCode(this.registerForm).then(
+                res =>{
+                    console.log(res)
+                },
+                err => {
+                    console.log(err)
+                }
+            )
+        }
+
+
+        handleRegister(){
+            registerAll(this.registerForm).then(
+                res =>{
+                    console.log(res)
+                },
+                err => {
+                    console.log(err)
+                }
+            )
         }
      }
 </script>
@@ -75,11 +114,25 @@
             margin: 0 auto;
             overflow: hidden;
 
-            .el-form-item{
+            .el-tag{
+                margin-right: 10px;
+            }
+            .svg-container {
+                padding: 6px 5px 6px 15px;
+                color: $darkGray;
+                vertical-align: middle;
+                width: 30px;
                 display: inline-block;
+            }
+
+            .el-form-item{
+                 display: inline-block;
+                font-size: large;
                 .el-input{
                     margin-right: 20px;
+                    display: inline-block;
                     .input{
+                        display: inline-block;
                         background: #97a8be;
                     }
                 }
@@ -88,7 +141,7 @@
     }
 
     .register-container::before {
-        background-image: url("../../../public/images/ts-vue-login-banner01.jpeg");
+        background-image: url("../../../public/images/register.jpg");
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
