@@ -34,11 +34,14 @@ export class GetArticle{
     pageSize:number;
     // 1 -1
     timeOrder:number;
+    articleId:number;
 }
 
 export const saveArticle = (params: Article) => postData("/saveArticle", params);
 
 export const getArticleList = (params:GetArticle) => postData("/getArticle",params);
+
+
 
 export const uploadImageToQiniu = (data: FormData, token: string) => {
 

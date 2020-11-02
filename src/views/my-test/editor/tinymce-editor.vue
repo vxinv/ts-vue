@@ -32,6 +32,7 @@
     import {token} from "morgan";
     import {guid} from "@/utils/random";
     import axios from "axios";
+    import {GetArticle, getArticleList} from "@/api/articles";
 
 
     // 编辑器插件plugins
@@ -65,12 +66,12 @@
         @Prop({
             type: Array,
             default() {
-                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent | superscript subscript | removeformat |"]
+                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent | superscript subscript |"]
             }
         })
         readonly toolbar: string[];
 
-        public myValue: string = "";
+        public myValue: string = "请书写您的笔记";
 
         public tinymceFlag:number = 0;
 
@@ -169,7 +170,21 @@
         }
 
         activated () {
-            this.tinymceFlag++
+            this.tinymceFlag++;
+            if (this.$route.query.id != null){
+                let getArticle = new GetArticle();
+                getArticle.articleId = Number(this.$route.query.id);
+                getArticleList(getArticle).then(
+                    res=>{
+                        console.log(res.data.list[0].content)
+                        this.myValue = res.data.list[0].content;
+                    },
+                    err=>{
+                        console.log(err)
+                    }
+                )
+            }
+
         }
 
     }

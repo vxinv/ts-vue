@@ -26,7 +26,7 @@
                                 placeholder="请输入内容"
                                 prefix-icon="el-icon-search"
                                 v-model="input2">
-                            <el-button slot="append"  icon="el-icon-search" @click="sousuo" > </el-button>
+                            <el-button slot="append" icon="el-icon-search" @click="sousuo"></el-button>
                         </el-input>
                     </div>
                 </el-col>
@@ -48,35 +48,45 @@
                 </el-table-column>
                 <el-table-column
                         align="center"
-                        label="姓名"
+                        label="用户"
                         prop="userName"
                         width="150">
                 </el-table-column>
                 <el-table-column
-                        align="center"
+                        align="left"
                         label="标题"
                         prop="title"
-                        width="150">
+                        width="650">
                 </el-table-column>
 
                 <el-table-column
                         align="center"
-                        label="地址">
+                        label="操作">
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"
+                                style="margin-right: 14px"
                                 @click="handleEdit(scope.$index, scope.row)">编辑
                         </el-button>
+
                         <el-button
                                 size="mini"
                                 type="danger"
+                                style="margin-right: 20px"
                                 @click="handleDelete(scope.$index, scope.row)">删除
                         </el-button>
-                        <el-button
-                                size="mini"
-                                type="info"
-                                @click="handleDelete(scope.$index, scope.row)">提醒
-                        </el-button>
+
+                        <el-dropdown @command="handleCommand">
+                            <el-button
+                                    size="mini"
+                                    type="info"
+                                    @click="handleDelete(scope.$index, scope.row)">提醒
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(info,index) in infoList" :key=index :command="index">{{info}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </template>
                 </el-table-column>
 
@@ -95,7 +105,7 @@
 <script lang='ts'>
     import {Component, Vue} from 'vue-property-decorator';
     import InfiniteLoading from 'vue-infinite-loading';
-    import {getArticleList, GetArticle} from "@/api/articles";
+    import {GetArticle, getArticleList} from "@/api/articles";
     import {UserModule} from "@/store/modules/user";
 
     @Component({components: {InfiniteLoading}})
@@ -103,25 +113,26 @@
         tableData = [];
         input2: string = '';
         select_scope: string = '';
-        select_time:string='';
+        select_time: string = '';
         height: string = '';
         pageNo = 1;
         pageSize = 10;
-        canGet:boolean = true;
+        canGet: boolean = true;
+        infoList = ["不推送","每天推送", "每周推送", "每月发送", "艾宾浩斯曲线", "仅当天推送"];
 
         create() {
             this.height = (document.documentElement.clientHeight * 0.8).toString()
         }
 
-       /* mounted(){
-            this.ArticleList()
-        }
-*/
+        /* mounted(){
+             this.ArticleList()
+         }
+ */
         /**
          * 获取笔记
          */
-        ArticleList(){
-            if (!this.canGet){
+        ArticleList() {
+            if (!this.canGet) {
                 return
             }
             let getArticle = new GetArticle();
@@ -130,30 +141,43 @@
             getArticle.userName = UserModule.name;
             getArticle.timeOrder = 1;
             getArticleList(getArticle).then(
-                res=>{
-                    if (res.data.hasNextPage){
+                res => {
+                    if (res.data.hasNextPage || res.data.pageNum==1) {
                         this.canGet = res.data.hasNextPage;
                         this.tableData.push(...res.data.list)
                         this.pageNo++;
                     }
                     return
                 },
-                err=>{
+                err => {
 
                 }
             )
         }
 
-        sousuo(){
+        handleEdit(index: any, row: any) {
+            this.$router.replace({
+                path: "/myTest/edit",
+                query: row,
+            });
+        }
+
+        handleCommand(command) {
+           /* this.notify = command
+            this.info = this.infoList[command]*/
+            this.$message('当前笔记按照' + this.infoList[command] + "推送给您");
+        }
+
+
+        sousuo() {
             alert(this.input2)
         }
 
         infiniteHandler($state) {
-            console.log("触发")
             setTimeout(() => {
                 this.ArticleList()
                 $state.loaded();
-            }, 2000);
+            }, 1000);
         }
     }
 </script>
@@ -167,6 +191,9 @@
         width: 100%;
     }
 
+    .btn_mimi{
+        margin-right: 20px;
+    }
     .com-container {
         display: flex;
         justify-content: center;
