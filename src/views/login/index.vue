@@ -128,18 +128,15 @@
         }
 
         mounted() {
+            if (UserModule.token == "out"){
+                return
+            }
             // 初始化完毕 直接登陆
             UserModule.Login(this.loginForm);
-
             this.$router.push({
                 path: this.redirect || "/",
                 query: this.otherQuery,
             });
-            /* if (this.loginForm.username === "") {
-               (this.$refs.username as Input).focus();
-             } else if (this.loginForm.password === "") {
-               (this.$refs.password as Input).focus();
-             }*/
         }
 
         private showPwd() {
@@ -158,7 +155,7 @@
                 if (valid) {
                     this.loading = true;
                     await UserModule.Login(this.loginForm);
-
+                    console.log(this.$refs.loginForm)
                     this.$router.push({
                         path: this.redirect || "/",
                         query: this.otherQuery,
