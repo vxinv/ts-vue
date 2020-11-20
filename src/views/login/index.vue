@@ -124,7 +124,7 @@
                                 throw  new Error()
                             }
                         }, err => {
-                            throw  new Error()
+                            throw  new Error(err)
                         })
                     await UserModule.Login(this.loginForm);
                     this.$router.push({

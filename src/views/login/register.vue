@@ -52,9 +52,14 @@
         }
 
         registerUserName(){
+            if (this.registerForm.username === "") {
+                this.$message("未正确填写用户名")
+                return
+            }
             registerUserName(this.registerForm).then(
-                res =>{
+                res => {
                     console.log(res)
+                    this.$message('用户名可以使用');
                 },
                 err => {
                     console.log(err)
@@ -62,10 +67,15 @@
             )
         }
 
-        getMailCode(){
+        getMailCode() {
+            if (this.registerForm.email === "") {
+                this.$message("未正确填写邮箱")
+                return
+            }
             getCode(this.registerForm).then(
-                res =>{
+                res => {
                     console.log(res)
+                    this.$message('验证码已发送');
                 },
                 err => {
                     console.log(err)
@@ -74,10 +84,18 @@
         }
 
 
-        handleRegister(){
+        handleRegister() {
+            if (this.registerForm.code === "") {
+                this.$message("未正确填写内容")
+                return
+            }
             registerAll(this.registerForm).then(
-                res =>{
+                res => {
                     console.log(res)
+                    this.$message('注册成功');
+                    this.$router.replace({
+                        path: "login"
+                    });
                 },
                 err => {
                     console.log(err)
