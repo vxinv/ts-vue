@@ -2,7 +2,7 @@
     <div class="register-container">
         <el-form class="register-form"
                  label-position="left"
-                 label-width="70px"
+                 label-width="60px"
                  :model="registerForm">
             <el-form-item label="名称">
                 <el-input v-model="registerForm.username"> </el-input>
@@ -34,12 +34,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Watch} from "vue-property-decorator";
-    import {Route} from "vue-router";
-    import {Form as ElForm, Input} from "element-ui";
-    import {UserModule} from "@/store/modules/user";
-    import {isValidUsername} from "@/utils/validate";
-    import {Dictionary} from 'vue-router/types/router';
+    import {Component, Vue} from "vue-property-decorator";
     import {getCode, registerAll, registerUserName} from "@/api/users";
 
     @Component({})
@@ -99,13 +94,6 @@
         position: relative;
         height: 100%;
         width: 100%;
-        // overflow: hidden;
-        // background-color: $loginBg;
-        // background-image: url("../../../public/images/ts-vue-login-banner01.jpeg");
-        // background-size: cover;
-        // background-position: center center;
-        // background-repeat: no-repeat;
-        // background-attachment: fixed;
         .register-form {
             position: relative;
             width: 520px;
@@ -125,13 +113,15 @@
                 display: inline-block;
             }
 
-            .el-form-item{
-                 display: inline-block;
+            .el-form-item {
+                display: inline-block;
                 font-size: large;
-                .el-input{
+
+                .el-input {
                     margin-right: 20px;
                     display: inline-block;
-                    .input{
+
+                    .input {
                         display: inline-block;
                         background: #97a8be;
                     }
@@ -141,7 +131,7 @@
     }
 
     .register-container::before {
-        background-image: url("../../../public/images/register.jpg");
+        background-image: url("../../../public/images/bg.jpg");
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;

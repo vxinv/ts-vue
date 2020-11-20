@@ -4,7 +4,6 @@
         <el-row>
             <el-col :span="20" :offset="2">
                 <tinymce-editor ref="editor"
-                                v-model="msg"
                                 @input="consoleInput"
                                 :disabled="disabled"
                                 @onClick="onClick">
@@ -43,7 +42,7 @@
 <script lang="ts">
     import {Component, Ref, Vue} from 'vue-property-decorator';
     import TinymceEditor from "./tinymce-editor.vue";
-    import {Article, GetArticle, getArticleList, saveArticle} from "@/api/articles";
+    import {Article, saveArticle} from "@/api/articles";
     import {UserModule} from "@/store/modules/user";
 
     @Component({
@@ -59,28 +58,14 @@
         input = '';
 
 
-        /*activated(){
-            console.log(this.$route.query)
-            let getArticle = new GetArticle();
-            getArticle.articleId = Number(this.$route.query.id);
-            getArticleList(getArticle).then(
-                res=>{
-                    console.log(res.data.list[0].content)
-                    this.msg = res.data.list[0].content;
-                },
-                err=>{
-                    console.log(err)
-                }
-            )
-        }*/
-
-
-
-
         onClick(e: any, editor: any) {
             console.log('Element clicked')
             console.log(e)
             console.log(editor)
+        }
+
+        public mounted(): void {
+
         }
 
         handleCommand(command) {

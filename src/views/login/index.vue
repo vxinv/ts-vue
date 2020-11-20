@@ -3,19 +3,15 @@
         <el-form
                 ref="loginForm"
                 :model="loginForm"
-                :rules="loginRules"
                 class="login-form"
                 autocomplete="on"
                 label-position="left"
+                label-width="60px"
         >
-
-            <el-form-item prop="username">
-                <span class="svg-container">
-                  <svg-icon name="user"/>
-                </span>
+            <el-form-item label="用户">
                 <el-input
                         ref="username"
-                        v-model="loginForm.username"
+                        v-model="loginForm.userName"
                         name="username"
                         type="text"
                         autocomplete="on"
@@ -23,26 +19,19 @@
                 />
             </el-form-item>
 
-            <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon name="password"/>
-        </span>
+            <el-form-item label="密码">
                 <el-input
                         :key="passwordType"
                         ref="password"
-                        v-model="loginForm.password"
+                        v-model="loginForm.passWord"
                         :type="passwordType"
                         placeholder="password"
                         name="password"
                         autocomplete="on"
                         @keyup.enter.native="handleLogin"
                 />
-                <span class="show-pwd" @click="showPwd">
-          <svg-icon
-                  :name="passwordType === 'password' ? 'eye-off' : 'eye-on'"
-          />
-        </span>
             </el-form-item>
+
             <div>
                 <el-button
                         :loading="loading"
@@ -51,9 +40,8 @@
                         @click.native.prevent="handleLogin"
                 >登录
                 </el-button>
-
-
             </div>
+
             <div>
                 <el-button
                         :loading="loading"
@@ -61,17 +49,9 @@
                         style="width:100%; margin-bottom:30px;"
                         @click.native.prevent="handleRegister"
                 >注册
-                </el-button
-                >
+                </el-button>
             </div>
 
-
-            <div style="position:relative">
-                <div class="tips">
-                    <span>username: admin</span>
-                    <span>password: any</span>
-                </div>
-            </div>
         </el-form>
     </div>
 </template>
@@ -81,34 +61,17 @@
     import {Route} from "vue-router";
     import {Form as ElForm, Input} from "element-ui";
     import {UserModule} from "@/store/modules/user";
-    import {isValidUsername} from "@/utils/validate";
     import {Dictionary} from 'vue-router/types/router';
+    import {login} from "@/api/users";
 
     @Component({
         name: "Login",
     })
     export default class extends Vue {
-        private validateUsername = (rule: any, value: string, callback: Function) => {
-            if (!isValidUsername(value)) {
-                callback(new Error("Please enter the correct user name"));
-            } else {
-                callback();
-            }
-        };
-        private validatePassword = (rule: any, value: string, callback: Function) => {
-            if (value.length < 6) {
-                callback(new Error("The password can not be less than 6 digits"));
-            } else {
-                callback();
-            }
-        };
+
         private loginForm = {
-            username: "admin",
-            password: "111111",
-        };
-        private loginRules = {
-            username: [{validator: this.validateUsername, trigger: "blur"}],
-            password: [{validator: this.validatePassword, trigger: "blur"}],
+            userName: "",
+            passWord: "",
         };
         private passwordType = "password";
         private loading = false;
@@ -128,11 +91,11 @@
         }
 
         mounted() {
-            if (UserModule.token == "out"){
+            if (UserModule.token == "out") {
                 return
             }
-            // 初始化完毕 直接登陆
-            UserModule.Login(this.loginForm);
+            // 初始化完毕 无需再次vuex 直接登录
+            //UserModule.Login(this.loginForm);
             this.$router.push({
                 path: this.redirect || "/",
                 query: this.otherQuery,
@@ -154,13 +117,20 @@
             (this.$refs.loginForm as ElForm).validate(async (valid: boolean) => {
                 if (valid) {
                     this.loading = true;
+                    await login(this.loginForm).then(
+                        res => {
+                            if (res == undefined) {
+                                this.loading = false;
+                                throw  new Error()
+                            }
+                        }, err => {
+                            throw  new Error()
+                        })
                     await UserModule.Login(this.loginForm);
-                    console.log(this.$refs.loginForm)
                     this.$router.push({
                         path: this.redirect || "/",
                         query: this.otherQuery,
                     });
-                    // Just to simulate the time of the request
                     setTimeout(() => {
                         this.loading = false;
                     }, 0.5 * 10);
@@ -192,65 +162,13 @@
     }
 </script>
 
-<style lang="scss">
-    // References: https://www.zhangxinxu.com/wordpress/2018/01/css-caret-color-first-line/
-    @supports (-webkit-mask: none) and (not (cater-color: $loginCursorColor)) {
-        .login-container .el-input {
-            input {
-                color: $loginCursorColor;
-            }
 
-            input::first-line {
-                color: $lightGray;
-            }
-        }
-    }
-
-    .login-container {
-        .el-input {
-            display: inline-block;
-            height: 47px;
-            width: 85%;
-
-            input {
-
-                height: 47px;
-                background: transparent;
-                border: 0px;
-                border-radius: 0px;
-                padding: 12px 5px 12px 15px;
-                color: $lightGray;
-                caret-color: $loginCursorColor;
-                -webkit-appearance: none;
-
-                &:-webkit-autofill {
-                    box-shadow: 0 0 0px 1000px $loginBg inset !important;
-                    -webkit-text-fill-color: #fff !important;
-                }
-            }
-        }
-
-        .el-form-item {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            color: #454545;
-        }
-    }
-</style>
 
 <style lang="scss" scoped>
     .login-container {
         position: relative;
         height: 100%;
         width: 100%;
-        // overflow: hidden;
-        // background-color: $loginBg;
-        // background-image: url("../../../public/images/ts-vue-login-banner01.jpeg");
-        // background-size: cover;
-        // background-position: center center;
-        // background-repeat: no-repeat;
-        // background-attachment: fixed;
         .login-form {
             position: relative;
             width: 520px;
@@ -259,7 +177,6 @@
             margin: 0 auto;
             overflow: hidden;
         }
-
         .tips {
             font-size: 14px;
             color: #fff;
@@ -304,7 +221,7 @@
     }
 
     .login-container::before {
-        background-image: url("../../../public/images/ts-vue-login-banner01.jpeg");
+        background-image: url("../../../public/images/bg.jpg");
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;

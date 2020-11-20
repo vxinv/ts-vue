@@ -1,20 +1,20 @@
 import router from "./router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { Message } from "element-ui";
-import { Route, RouteConfig } from "vue-router";
-import { UserModule } from "@/store/modules/user";
-import { PermissionModule } from "@/store/modules/permission";
+import {Message} from "element-ui";
+import {Route} from "vue-router";
+import {UserModule} from "@/store/modules/user";
+import {PermissionModule} from "@/store/modules/permission";
 
-NProgress.configure({ showSpinner: false });
+NProgress.configure({showSpinner: false});
 
 const whiteList = ["/login"];
 
 router.beforeEach(async (to: Route, _: Route, next: any) => {
 
-  // Start progress bar
-  NProgress.start();
-  // Determine whether the user has logged in
+    // Start progress bar
+    NProgress.start();
+    // Determine whether the user has logged in
   if (to.path === '/register'){
     next();
     NProgress.done();
@@ -37,10 +37,8 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
           // Get user info, including roles
           await UserModule.GetUserInfo();
           const roles = UserModule.roles;
-          console.log(roles)
+            console.log("enter1")
           // Generate accessible routes map based on role
-
-
           const accessedRoutes: any = await PermissionModule.GenerateRoutes(
             ["admin"]
           );
