@@ -7,10 +7,13 @@
       @toggleClick="toggleSideBar"
     />
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+
     <div class="right-menu">
+
       <template v-if="device !== 'mobile'">
         <screenfull class="right-menu-item hover-effect" />
       </template>
+
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
         trigger="click"
@@ -19,6 +22,7 @@
           <img src="@/assets/avatar.jpeg" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
+
         <el-dropdown-menu slot="dropdown">
 
           <a target="_blank" href="https://github.com/lixin888888">
@@ -34,22 +38,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { AppModule } from "@/store/modules/app";
-import { UserModule } from "@/store/modules/user";
-import Breadcrumb from "@/components/Breadcrumb/index.vue";
-import Hamburger from "@/components/Hamburger/index.vue";
-import Screenfull from "@/components/Screenfull/index.vue";
+  import {Component, Vue} from "vue-property-decorator";
+  import {AppModule} from "@/store/modules/app";
+  import {UserModule} from "@/store/modules/user";
+  import Breadcrumb from "@/components/Breadcrumb/index.vue";
+  import Hamburger from "@/components/Hamburger/index.vue";
+  import Screenfull from "@/components/Screenfull/index.vue";
 
-@Component({
-  name: "Navbar",
-  components: {
-    Breadcrumb,
-    Hamburger,
-    Screenfull,
-  },
-})
-export default class extends Vue {
+  @Component({
+    name: "Navbar",
+    components: {
+      Breadcrumb,
+      Hamburger,
+      Screenfull,
+    },
+  })
+  export default class extends Vue {
   get sidebar() {
     return AppModule.sidebar;
   }

@@ -1,98 +1,95 @@
 <template>
-        <editor :disabled="disabled"
-                :init="init"
-                :key="tinymceFlag"
-                @onClick="onClick"
-                ref="myEditor"
-                v-model="myValue">
-        </editor>
+    <editor :disabled="disabled"
+            :init="init"
+            :key="tinymceFlag"
+            @onClick="onClick"
+            ref="myEditor"
+            v-model="myValue">
+    </editor>
 </template>
 <script lang="ts">
 
-        import {Component, Prop, Ref, Vue, Watch} from 'vue-property-decorator';
-        import tinymce, {Editor as MyEdit, UploadResult} from 'tinymce';
-        import Editor from '@tinymce/tinymce-vue';
-        import 'tinymce/themes/silver';
-        import 'tinymce/icons/default/icons.min.js'
-        import 'tinymce/plugins/image' // 插入上传图片插件
-        import 'tinymce/plugins/media' // 插入视频插件
-        import 'tinymce/plugins/table' // 插入表格插件
-        import 'tinymce/plugins/lists' // 列表插件
-        import 'tinymce/plugins/wordcount'
-        import 'tinymce/plugins/fullscreen'
-        import 'tinymce/plugins/code'
-        import 'tinymce/plugins/charmap'
-        import 'tinymce/plugins/searchreplace'
-        import 'tinymce/plugins/insertdatetime'
-        import 'tinymce/plugins/codesample'
-        import {geneToken} from "@/utils/qiniuToken";
+    import {Component, Emit, Prop, Ref, Vue, Watch} from 'vue-property-decorator';
+    import tinymce, {Editor as MyEdit, UploadResult} from 'tinymce';
+    import Editor from '@tinymce/tinymce-vue';
+    import 'tinymce/themes/silver';
+    import 'tinymce/icons/default/icons.min.js'
+    import 'tinymce/plugins/image' // 插入上传图片插件
+    import 'tinymce/plugins/media' // 插入视频插件
+    import 'tinymce/plugins/table' // 插入表格插件
+    import 'tinymce/plugins/lists' // 列表插件
+    import 'tinymce/plugins/wordcount'
+    import 'tinymce/plugins/fullscreen'
+    import 'tinymce/plugins/code'
+    import 'tinymce/plugins/charmap'
+    import 'tinymce/plugins/searchreplace'
+    import 'tinymce/plugins/insertdatetime'
+    import 'tinymce/plugins/codesample'
+    import {geneToken} from "@/utils/qiniuToken";
 
-        import {token} from "morgan";
-        import {guid} from "@/utils/random";
-        import axios from "axios";
-        import {GetArticle, getArticleList} from "@/api/articles";
+    import {token} from "morgan";
+    import {guid} from "@/utils/random";
+    import axios from "axios";
+    import {GetArticle, getArticleList} from "@/api/articles";
 
 
-        // 编辑器插件plugins
-        // 更多插件参考：https://www.tiny.cloud/docs/plugins/
-        // 字数统计插件
-        @Component(
-                {
-                        components: {Editor}
-                }
-        )
+    // 编辑器插件plugins
+    // 更多插件参考：https://www.tiny.cloud/docs/plugins/
+    // 字数统计插件
+    @Component(
+        {
+            components: {Editor}
+        }
+    )
     export default class TinymceEditor extends Vue {
 
-        @Prop({default: ''})
-        value: string;
+        @Prop({default: ''}) value: string;
         // 基本路径，默认为空根目录，如果你的项目发布后的地址为目录形式，
         // 即abc.com/tinymce，baseUrl需要配置成tinymce，不然发布后资源会找不到
-        @Prop({default: ''})
-        baseUrl: string;
+        @Prop({default: ''}) baseUrl: string;
 
-        @Prop({default: false})
-        disabled: boolean;
+        @Prop({default: false}) disabled: boolean;
 
         @Prop({
             type: Array, //表示是一个string类型的数组
             default() {
-                    return ["image media table lists fullscreen code charmap insertdatetime searchreplace codesample"]
+                return ["image media table lists fullscreen code charmap insertdatetime searchreplace codesample"]
             }
-        })
-        readonly plugins!: string[];
+        }) readonly plugins!: string[];
 
         @Prop({
             type: Array,
             default() {
-                    return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent |"]
+                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent |"]
             }
-        })
-        readonly toolbar: string[];
+        }) readonly toolbar: string[];
 
         public myValue: string = "请书写您的笔记";
 
-                public tinymceFlag: number = 0;
+        public tinymceFlag: number = 0;
 
         @Ref("myEditor") myEdit: MyEdit;
 
+        public id: string = "";
+
         init = {
-                language_url: `${this.baseUrl}/tinymce/langs/zh_CN.js`,
-                language: 'zh_CN',
-                skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide`,
-                content_css: `${this.baseUrl}/tinymce/skins/content/default/content.css`,
-                //skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`,
-                //content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`,
-                height: document.documentElement.clientHeight - 60,
-                plugins: this.plugins,
-                toolbar: this.toolbar,
-                paste_data_images: true,
-                menubar: false,
-                branding: false,
-                codesample_languages: [
-                        {text: 'HTML/XML', value: 'markup'},
-                        {text: 'JavaScript', value: 'javascript'},
-                        {text: 'CSS', value: 'css'},
-                        {text: 'Java', value: 'java'},
+            language_url: `${this.baseUrl}/tinymce/langs/zh_CN.js`,
+            language: 'zh_CN',
+            skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide`,
+            content_css: `${this.baseUrl}/tinymce/skins/content/default/content.css`,
+            //skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`,
+            //content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`,
+            height: document.documentElement.clientHeight - 60,
+            plugins: this.plugins,
+            toolbar: this.toolbar,
+            paste_data_images: true,
+            menubar: false,
+            branding: false,
+            codesample_languages: [
+                {text: 'HTML/XML', value: 'markup'},
+                {text: 'JavaScript', value: 'javascript'},
+                {text: 'CSS', value: 'css'},
+                {text: 'Java', value: 'java'},
                 {text: 'C++', value: 'cpp'},
             ],
             paste_preprocess: (plugin: any, args: any) => {
@@ -141,7 +138,6 @@
             axios
                 .post('http://upload.qiniup.com/', form)
                 .then((res) => {
-                    console.log(res)
                     success('http://one.ijavascript.club/' + res.data.key);
                     return res.data
                 })
@@ -153,10 +149,13 @@
                 )
         }
 
+        public clear() {
+            this.myValue = "";
+        };
 
         mounted() {
-                console.log("tinymce.init(this.init)")
-                tinymce.init(this.init)
+            console.log("tinymce.init(this.init)")
+            tinymce.init(this.init)
         }
 
         onClick(event: MessageEvent) {
@@ -168,19 +167,29 @@
             //console.log(newValue)
         }
 
-                activated() {
-                        this.tinymceFlag++;
-                        if (this.$route.query.id != null) {
-                                let getArticle = new GetArticle();
-                                getArticle.articleId = Number(this.$route.query.id);
-                                getArticleList(getArticle).then(
-                                        res => {
-                                                this.myValue = res.data.list[0].content;
-                                        },
-                                        err => {
-                                                console.log(err)
-                                        }
-                                )
+        @Emit("change-title-notify")
+        changeTitle(title: string, type: number) {
+            return {
+                title: title,
+                type: type - 1
+            }
+        }
+
+        activated() {
+            this.tinymceFlag++;
+            if (this.$route.query.id != null) {
+                this.id = this.$route.query.id as string;
+                let getArticle = new GetArticle();
+                getArticle.articleId = Number(this.$route.query.id as string);
+                getArticleList(getArticle).then(
+                    res => {
+                        this.myValue = res.data.list[0].content;
+                        this.changeTitle(res.data.list[0].title, res.data.list[0].notify)
+                    },
+                    err => {
+                        console.log(err)
+                    }
+                )
             }
 
         }

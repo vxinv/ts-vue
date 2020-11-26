@@ -47,8 +47,7 @@ export const constantRoutes: RouteConfig[] = [
             import(/* webpackChunkName: "login" */ "@/views/login/register.vue"),
         meta: {hidden: true}
     },
-
-    {
+   /* {
         path: "/",
         component: Layout,
         redirect: "/dashboard",
@@ -57,13 +56,57 @@ export const constantRoutes: RouteConfig[] = [
                 path: "dashboard",
                 component: () =>
                     import(
-                        /* webpackChunkName: "dashboard" */ "@/views/dashboard/index.vue"
+                        /!* webpackChunkName: "dashboard" *!/ "@/views/dashboard/index.vue"
                         ),
                 name: "Dashboard",
                 meta: {
                     title: "dashboard",
                     icon: "dashboard",
-                    affix: true
+                }
+            }
+        ]
+    },*/
+    {
+        path: "/",
+        component: Layout,
+        redirect: "/edit",
+        meta: {
+            title: "笔记邮件",
+            icon: "dashboard",
+            alwaysShow: true
+        },
+        children: [
+            /* {
+                 path: "index",
+                 component: () =>
+                     import(/!* webpackChunkName: "guide" *!/ "@/views/guide/index.vue"),
+                 name: "Guide",
+                 meta: {
+                     title: "guide",
+                     icon: "guide",
+                     noCache: true
+                 }
+             },*/
+            {
+                path: "edit",
+                component: () =>
+                    import( "@/views/my-test/editor/myedit.vue"),
+                name: "Edit",
+                meta: {
+                    title: "编辑工具",
+                    icon: "user",
+                    keepAlive: true,
+                }
+            },
+            {
+                path: "articleList",
+                component: () =>
+                    import( "@/views/my-test/manager/table/tableList.vue"),
+                name: "articleList",
+                meta: {
+                    title: "笔记列表",
+                    icon: "user",
+                    keepAlive: true,
                 }
             }
         ]
@@ -73,26 +116,8 @@ export const constantRoutes: RouteConfig[] = [
         component: () =>
             import(/* webpackChunkName: "404" */ "@/views/error-page/404.vue"),
         meta: {hidden: true}
-    },
-    {
-        path: "/guide",
-        component: Layout,
-        redirect: "/guide/index",
-        children: [
-            {
-                path: "index",
-                component: () =>
-                    import(/* webpackChunkName: "guide" */ "@/views/guide/index.vue"),
-                name: "Guide",
-                meta: {
-                    title: "guide",
-                    icon: "guide",
-                    noCache: true
-                }
-            }
-        ]
-    },
-    {
+    }
+    /*{
         path: "/example",
         component: Layout,
         redirect: "/example/tree",
@@ -105,15 +130,15 @@ export const constantRoutes: RouteConfig[] = [
             {
                 path: "tree",
                 component: () =>
-                    import(/* webpackChunkName: "tree" */ "@/views/tree/index.vue"),
+                    import(/!* webpackChunkName: "tree" *!/ "@/views/tree/index.vue"),
                 meta: {
                     title: "Tree",
                     icon: "tree"
                 }
             }
         ]
-    },
-    {
+    },*/
+    /*{
         path: "/table",
         component: Layout,
         redirect: "/table/list",
@@ -126,7 +151,7 @@ export const constantRoutes: RouteConfig[] = [
                 path: "create",
                 component: () =>
                     import(
-                        /* webpackChunkName: "table-create" */ "@/views/table/create.vue"
+                        /!* webpackChunkName: "table-create" *!/ "@/views/table/create.vue"
                         ),
                 name: "CreateArticle",
                 meta: {
@@ -137,7 +162,7 @@ export const constantRoutes: RouteConfig[] = [
             {
                 path: "edit/:id(\\d+)",
                 component: () =>
-                    import(/* webpackChunkName: "table-edit" */ "@/views/table/edit.vue"),
+                    import(/!* webpackChunkName: "table-edit" *!/ "@/views/table/edit.vue"),
                 name: "EditArticle",
                 meta: {
                     title: "editArticle",
@@ -150,7 +175,7 @@ export const constantRoutes: RouteConfig[] = [
                 path: "list",
                 component: () =>
                     import(
-                        /* webpackChunkName: "table-list" */ "@/views/table/index.vue"
+                        /!* webpackChunkName: "table-list" *!/ "@/views/table/index.vue"
                         ),
                 name: "ArticleList",
                 meta: {
@@ -159,7 +184,7 @@ export const constantRoutes: RouteConfig[] = [
                 }
             }
         ]
-    }
+    }*/
 ];
 
 /**
@@ -168,7 +193,7 @@ export const constantRoutes: RouteConfig[] = [
  */
 
 export const asyncRoutes: RouteConfig[] = [
-    {
+    /*{
         path: "/permission",
         component: Layout,
         redirect: "/permission/setting",
@@ -183,7 +208,7 @@ export const asyncRoutes: RouteConfig[] = [
             {
                 path: "account",
                 component: () =>
-                    import(/* webpackChunkName: "account" */ "@/views/account/index.vue"),
+                    import(/!* webpackChunkName: "account" *!/ "@/views/account/index.vue"),
                 name: "Account",
                 meta: {
                     title: "account",
@@ -194,7 +219,7 @@ export const asyncRoutes: RouteConfig[] = [
             {
                 path: "setting",
                 component: () =>
-                    import(/* webpackChunkName: "setting" */ "@/views/setting/index.vue"),
+                    import(/!* webpackChunkName: "setting" *!/ "@/views/setting/index.vue"),
                 name: "Setting",
                 meta: {
                     title: "setting",
@@ -305,17 +330,6 @@ export const asyncRoutes: RouteConfig[] = [
                     icon: "user",
                     roles: ["admin"] // or you can only set roles in sub nav
                 }
-            },
-            {
-                path: "articleList",
-                component: () =>
-                    import( "@/views/my-test/manager/table/tableList.vue"),
-                name: "articleList",
-                meta: {
-                    title: "笔记列表",
-                    icon: "user",
-                    roles: ["admin"] // or you can only set roles in sub nav
-                }
             }
 
         ]
@@ -331,7 +345,7 @@ export const asyncRoutes: RouteConfig[] = [
             {
                 path: "index",
                 component: () =>
-                    import(/* webpackChunkName: "charts" */ "@/views/charts/index.vue"),
+                    import(/!* webpackChunkName: "charts" *!/ "@/views/charts/index.vue"),
                 name: "charts",
                 meta: {
                     title: "charts",
@@ -339,7 +353,7 @@ export const asyncRoutes: RouteConfig[] = [
                 }
             }
         ]
-    },
+    },*/
     {
         path: "*",
         redirect: "/404",

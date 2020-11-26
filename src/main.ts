@@ -19,6 +19,7 @@ Vue.use(SvgIcon, {
   defaultWidth: "1em",
   defaultHeight: "1em"
 });
+Vue.prototype.HOST = '/api'
 
 // Register global filter functions
 Object.keys(filters).forEach(key => {

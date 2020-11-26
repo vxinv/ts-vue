@@ -4,6 +4,7 @@
         <el-row>
             <el-col :span="20" :offset="2">
                 <tinymce-editor ref="editor"
+                                @change-title-notify="changeTitleNotify"
                                 @input="consoleInput"
                                 :disabled="disabled"
                                 @onClick="onClick">
@@ -12,17 +13,20 @@
         </el-row>
 
         <el-row style="margin-top: 10px;margin-bottom: 10px;">
-            <el-col :span="13" :offset="2" style="padding-right: 20px">
+            <el-col :offset="2" :span="11" style="padding-right: 20px">
                 <el-input v-model="input" placeholder="笔记标题"></el-input>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="9">
                 <div style="display: flex;flex-direction: row;justify-content: flex-end">
+
+                    <el-button @click="clear" icon="el-icon-edit" style="margin-right: 20px" type="primary"> 清空
+                    </el-button>
 
                     <el-button type="success" icon="el-icon-edit" style="margin-right: 20px" @click="publish"> 发布
                     </el-button>
 
                     <!-- <el-button   @click="disabled"> 禁用 </el-button>-->
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleCommand" trigger="click">
                         <el-button type="info" icon="el-icon-edit">{{info}}<i
                                 class="el-icon-arrow-down el-icon--right"></i>
                         </el-button>
@@ -52,9 +56,13 @@
         @Ref('editor') editor!: TinymceEditor;
         msg: string = '请输入内容';
         disabled: boolean = false;
-        infoList = ["不推送","每天推送", "每周推送", "每月发送", "艾宾浩斯曲线", "仅当天推送"];
-        notify: number;
-        info: string = "提醒";
+        // 每周三
+        // 每月15
+        // 艾宾浩斯 1 2 4 7 15
+        // // 0 全部类型 1 不推送 2 每两天推送 3 每周三推送 4 每月15 推送 5 艾宾浩斯推送 6 当天推送
+        infoList = ["不推送", "每两天推送", "每周三推送", "每月15日推送", "艾宾浩斯曲线", "仅当天推送", "每天推送"];
+        notify: number = 0;
+        info: string = "提醒方式";
         input = '';
 
 
@@ -78,9 +86,12 @@
             let article = new Article();
             article.userName = UserModule.name
             article.content = (this.editor as any).myValue;
-            article.notify = this.notify;
+            // 和后端数据对应
             article.title = this.input;
+            article.notify = this.notify;
             let ca = this.checkArticle(article);
+            article.notify = this.notify + 1;
+            article.id = (this.editor as any).id;
             if (!ca.res) {
                 this.$message("未上传成功 " + ca.msg)
                 return
@@ -93,20 +104,33 @@
             })
         }
 
+        clear() {
+            var editor: any = (this.editor as any);
+            editor.clear()
+            //console.log((this.editor as any).id)
+            editor.id = null;
+
+        }
+
         // 打印输入的内容
         consoleInput(newInput: string) {
             console.log(newInput)
         }
 
+        changeTitleNotify(param: any) {
+            this.input = param.title;
+            this.info = this.infoList[param.type]
+        }
+
         // 检测发送的内容是否合规
         checkArticle(article: Article): any {
-            if (article.content.toString().length < 100) {
+            if (article.content.toString().length < 20) {
                 return {
                     res: false,
                     msg: "内容太短"
                 }
             }
-            if (article.notify == null || article.notify == -1) {
+            if (article.notify == 0) {
                 return {
                     res: false,
                     msg: "没有设置提醒"

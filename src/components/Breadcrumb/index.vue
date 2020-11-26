@@ -13,20 +13,22 @@
 </template>
 
 <script lang="ts">
-import pathToRegexp from "path-to-regexp";
-import { Component, Vue, Watch } from "vue-property-decorator";
-import { RouteRecord, Route } from "vue-router";
-@Component({
-  name: "Breadcrumb"
-})
-export default class extends Vue {
-  private breadcrumbs: RouteRecord[] = [];
-  @Watch("$route")
-  private onRouteChange(route: Route) {
-    // if you go to the redirect page, do not update the breadcrumbs
-    if (route.path.startsWith("/redirect/")) {
-      return;
-    }
+  import pathToRegexp from "path-to-regexp";
+  import {Component, Vue, Watch} from "vue-property-decorator";
+  import {Route, RouteRecord} from "vue-router";
+
+  @Component({
+    name: "Breadcrumb"
+  })
+  export default class extends Vue {
+    private breadcrumbs: RouteRecord[] = [];
+
+    @Watch("$route")
+    private onRouteChange(route: Route) {
+      // if you go to the redirect page, do not update the breadcrumbs
+      if (route.path.startsWith("/redirect/")) {
+        return;
+      }
     this.getBreadcrumb();
   }
   created() {
@@ -39,7 +41,7 @@ export default class extends Vue {
     const first = matched[0];
     if (!this.isDashboard(first)) {
       matched = [
-        { path: "/dashboard", meta: { title: "Dashboard" } } as RouteRecord
+        /* { path: "/dashboard", meta: { title: "Dashboard" } } as RouteRecord*/
       ].concat(matched);
     }
     this.breadcrumbs = matched.filter(item => {

@@ -4,11 +4,10 @@ import {UserModule} from "@/store/modules/user";
 
 
 const service = axios.create({
-  baseURL: "", // url = base url + request url
+  baseURL: 'http://127.0.0.1:6060/api', // url = base url + request url
   timeout: 20000
   // withCredentials: true // send cookies when cross-domain requests
 })
-
 
 // 请求拦截器
 service.interceptors.request.use(

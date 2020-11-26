@@ -1,12 +1,12 @@
 const path = require("path");
-const name = "TS-VUE";
-const sourceMap = process.env.NODE_ENV === "development";
+const name = "笔记邮件";
 
-const devServerPort = 8092;
+const devServerPort = 6060;
 const mockServerPort = 9528;
 
 module.exports = {
-  publicPath: "/", // 基本路径
+  publicPath: '/',
+  assetsDir: 'static',
   outputDir: "dist", // 输出文件目录
   lintOnSave: process.env.NODE_ENV === "development", // eslint-loader 是否在保存的时候检查
   chainWebpack: config => {
@@ -15,7 +15,7 @@ module.exports = {
     config.set("name", name);
   },
 
-  productionSourceMap: sourceMap, // 生产环境是否生成 sourceMap 文件
+  productionSourceMap: false, // 生产环境是否生成 sourceMap 文件
   css: {
     // css相关配置
     // 是否使用css分离插件 ExtractTextPlugin
@@ -30,23 +30,17 @@ module.exports = {
   // use thread-loader for babel & TS in production build
   // enabled by default if the machine has more than 1 cores
   parallel: require("os").cpus().length > 1,
-  // PWA 插件相关配置
-  // see https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
-  pwa: {},
   devServer: {
     open: true,
     progress: true, // 控制台打印进度条
     port: devServerPort,
     proxy: {
-
-      // 设置代理2
-      // proxy all requests starting with /api to jsonplaceholder
-      ['/']: {
-          target: `http://127.0.0.1:8090/`,
-          changeOrigin: true,
-          pathRewite: {
-              '^/': ""
-          }
+      ['/api']: {
+        target: `http://112.126.100.73:6060/mailnote`,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^/api']: ''
+        }
       }
     }
   },
