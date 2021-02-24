@@ -15,7 +15,7 @@
                         name="username"
                         type="text"
                         autocomplete="on"
-                        placeholder="username"
+                        placeholder="用户"
                 />
             </el-form-item>
 
@@ -25,7 +25,7 @@
                         ref="password"
                         v-model="loginForm.passWord"
                         :type="passwordType"
-                        placeholder="password"
+                        placeholder="密码"
                         name="password"
                         autocomplete="on"
                         @keyup.enter.native="handleLogin"

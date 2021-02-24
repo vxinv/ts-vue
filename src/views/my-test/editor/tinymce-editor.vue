@@ -53,18 +53,23 @@
         @Prop({
             type: Array, //表示是一个string类型的数组
             default() {
-                return ["image media table lists fullscreen code charmap insertdatetime searchreplace codesample"]
+                return ["image media table lists fullscreen code charmap insertdatetime searchreplace codesample "]
             }
         }) readonly plugins!: string[];
-
+=
+        // backcolor  | bold italic underline strikethrough
         @Prop({
             type: Array,
             default() {
-                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link unlink | numlist bullist | image media table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent |"]
+                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | numlist bullist | image media table | fontselect fontsizeselect forecolor bold underline| indent outdent | removeformat |"]
             }
-        }) readonly toolbar: string[];
+        })
+        readonly toolbar: string[];
 
-        public myValue: string = "请书写您的笔记";
+        public myValue: string = "<p><span style=\"font-family: 'book antiqua', palatino, serif;\">1 一级标题</span></p>\n" +
+            "<p><span style=\"font-family: 'book antiqua', palatino, serif; font-size: 16pt;\">1 二级标题</span></p>\n" +
+            "<p style=\"padding-left: 40px;\"><span style=\"font-family: 'book antiqua', palatino, serif; font-size: 14pt;\">记录的模版</span><span style=\"font-family: 'book antiqua', palatino, serif; font-size: 14pt;\">&nbsp;</span></p>\n" +
+            "<p style=\"padding-left: 40px;\">&nbsp;</p>";
 
         public tinymceFlag: number = 0;
 
@@ -80,18 +85,23 @@
             //skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`,
             //content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`,
             height: document.documentElement.clientHeight - 60,
+            font_formats: 'Book Antiqua=book antiqua,palatino;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva',
+            fontsize_formats: '14pt 16pt 18pt 20pt',
+            allow_script_urls: true,
             plugins: this.plugins,
             toolbar: this.toolbar,
             paste_data_images: true,
             menubar: false,
             branding: false,
+            //theme:'silver',
             codesample_languages: [
-                {text: 'HTML/XML', value: 'markup'},
+               /* {text: 'HTML/XML', value: 'markup'},*/
                 {text: 'JavaScript', value: 'javascript'},
-                {text: 'CSS', value: 'css'},
+               /* {text: 'CSS', value: 'css'},*/
                 {text: 'Java', value: 'java'},
                 {text: 'C++', value: 'cpp'},
             ],
+            insertdatetime_formats: ["%Y-%m-%d %H:%M"],
             paste_preprocess: (plugin: any, args: any) => {
                 console.log("==========>" + args)
             },
@@ -107,6 +117,8 @@
                 let data = this.uploadImage(formdata, success);
                 console.log(data)
             },
+
+
 
             init_instance_callback: (editor) => {
                 /*if (_this.value) {
@@ -131,9 +143,20 @@
                 })
 
             },
+            /*formats:{
+                bold: { selector: 'pre', styles: {'color':'red','font-family': 'terminal, monaco; font-size: 14pt;'} }
+            },*/
+            // 设置默认字体
+            setup: function(editor) {
+                editor.on('init', function(e) {
+                    this.getBody().style.fontSize = '18pt';
+                    //this.getBody().style.color = '#040404';
+                    this.getBody().style.fontFamily = 'book antiqua;';
+                    this.getBody().style.backgroundColor='#fffbf0';
+                });
+            }
 
         }
-
         uploadImage(form: FormData, success: Function): any {
             axios
                 .post('http://upload.qiniup.com/', form)
@@ -156,6 +179,7 @@
         mounted() {
             console.log("tinymce.init(this.init)")
             tinymce.init(this.init)
+
         }
 
         onClick(event: MessageEvent) {

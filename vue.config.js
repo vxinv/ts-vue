@@ -41,7 +41,14 @@ module.exports = {
         pathRewrite: {
           ['^/api']: ''
         }
-      }
+      },
+      ['/fund']: {
+        target: `http://127.0.0.1:8086/fund`,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^/fund']: ''
+        }
+      },
     }
   },
   // 第三方插件配置

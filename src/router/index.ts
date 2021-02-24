@@ -47,25 +47,7 @@ export const constantRoutes: RouteConfig[] = [
             import(/* webpackChunkName: "login" */ "@/views/login/register.vue"),
         meta: {hidden: true}
     },
-   /* {
-        path: "/",
-        component: Layout,
-        redirect: "/dashboard",
-        children: [
-            {
-                path: "dashboard",
-                component: () =>
-                    import(
-                        /!* webpackChunkName: "dashboard" *!/ "@/views/dashboard/index.vue"
-                        ),
-                name: "Dashboard",
-                meta: {
-                    title: "dashboard",
-                    icon: "dashboard",
-                }
-            }
-        ]
-    },*/
+
     {
         path: "/",
         component: Layout,
@@ -105,6 +87,30 @@ export const constantRoutes: RouteConfig[] = [
                 name: "articleList",
                 meta: {
                     title: "笔记列表",
+                    icon: "user",
+                    keepAlive: true,
+                }
+            },
+        ]
+    },
+
+    {
+        path: "/trade",
+        component: Layout,
+        redirect: "/trade",
+        meta: {
+            title: "交易舱",
+            icon: "dashboard",
+            alwaysShow: true
+        },
+        children: [
+            {
+                path: "stockList",
+                component: () =>
+                    import( "@/views/fund/stockList.vue"),
+                name: "stockList",
+                meta: {
+                    title: "持仓列表",
                     icon: "user",
                     keepAlive: true,
                 }

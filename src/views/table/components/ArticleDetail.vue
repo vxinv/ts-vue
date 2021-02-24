@@ -1,4 +1,4 @@
-<template>
+<template xmlns="">
   <div class="container">
     <el-form ref="articleForm" :model="articleForm" label-width="120px" :rules="rules">
       <el-form-item label="Author:" class="postInfo-container-item" prop="author">
