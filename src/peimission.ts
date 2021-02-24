@@ -11,7 +11,6 @@ NProgress.configure({showSpinner: false});
 const whiteList = ["/login"];
 
 router.beforeEach(async (to: Route, _: Route, next: any) => {
-
     // Start progress bar
     NProgress.start();
     // Determine whether the user has logged in

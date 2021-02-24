@@ -10,34 +10,34 @@
         >
             <el-form-item label="用户">
                 <el-input
-                        ref="username"
-                        v-model="loginForm.userName"
-                        name="username"
-                        type="text"
                         autocomplete="on"
+                        name="username"
                         placeholder="username"
+                        ref="username"
+                        type="text"
+                        v-model="loginForm.userName"
                 />
             </el-form-item>
 
             <el-form-item label="密码">
                 <el-input
                         :key="passwordType"
+                        :type="passwordType"
+                        @keyup.enter.native="handleLogin"
+                        autocomplete="on"
+                        name="password"
+                        placeholder="password"
                         ref="password"
                         v-model="loginForm.passWord"
-                        :type="passwordType"
-                        placeholder="password"
-                        name="password"
-                        autocomplete="on"
-                        @keyup.enter.native="handleLogin"
                 />
             </el-form-item>
 
             <div>
                 <el-button
                         :loading="loading"
-                        type="primary"
-                        style="width:100%; margin-bottom:30px;"
                         @click.native.prevent="handleLogin"
+                        style="width:100%; margin-bottom:30px;"
+                        type="primary"
                 >登录
                 </el-button>
             </div>
@@ -45,9 +45,9 @@
             <div>
                 <el-button
                         :loading="loading"
-                        type="primary"
-                        style="width:100%; margin-bottom:30px;"
                         @click.native.prevent="handleRegister"
+                        style="width:100%; margin-bottom:30px;"
+                        type="primary"
                 >注册
                 </el-button>
             </div>
@@ -79,17 +79,6 @@
         private redirect?: string;
         private otherQuery: Dictionary<string> = {};
 
-        @Watch("$route", {immediate: true})
-        private onRouteChange(route: Route) {
-            // TODO: remove the "as Dictionary<string>" hack after v4 release for vue-router
-            // See https://github.com/vuejs/vue-router/pull/2050 for details
-            const query = route.query as Dictionary<string>;
-            if (query) {
-                this.redirect = query.redirect;
-                this.otherQuery = this.getOtherQuery(query);
-            }
-        }
-
         mounted() {
             if (UserModule.token == "out") {
                 return
@@ -100,6 +89,17 @@
                 path: this.redirect || "/",
                 query: this.otherQuery,
             });
+        }
+
+        @Watch("$route", {immediate: true})
+        private onRouteChange(route: Route) {
+            // TODO: remove the "as Dictionary<string>" hack after v4 release for vue-router
+            // See https://github.com/vuejs/vue-router/pull/2050 for details
+            const query = route.query as Dictionary<string>;
+            if (query) {
+                this.redirect = query.redirect;
+                this.otherQuery = this.getOtherQuery(query);
+            }
         }
 
         private showPwd() {

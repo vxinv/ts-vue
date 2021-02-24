@@ -5,9 +5,9 @@
                  label-width="60px"
                  :model="registerForm">
             <el-form-item label="名称">
-                <el-input v-model="registerForm.username"> </el-input>
+                <el-input v-model="registerForm.username"></el-input>
             </el-form-item>
-            <el-button style="margin-left: 30px" type="primary" @click="registerUserName">验证用户名</el-button>
+            <!--<el-button style="margin-left: 30px" type="primary" @click="registerUserName">验证用户名</el-button>-->
 
             <el-form-item label="密码">
                 <el-input v-model="registerForm.password"></el-input>
@@ -47,51 +47,54 @@
         registerForm = {
             username: '',
             password: '',
-            email:'',
-            code:''
+            email: '',
+            code: ''
         }
 
-        registerUserName(){
+        clickUserName = false;
+        private userNameCanUser: boolean = false;
+
+        registerUserName() {
             if (this.registerForm.username === "") {
                 this.$message("未正确填写用户名")
                 return
             }
             registerUserName(this.registerForm).then(
                 res => {
-                    console.log(res)
-                    this.$message('用户名可以使用');
+                    //this.clickUserName = true;
+                    //this.$message('用户名可以使用');
                 },
                 err => {
-                    console.log(err)
+                    this.$message('用户名不可以使用');
+                    //console.log(err)
                 }
             )
         }
 
         getMailCode() {
+
             if (this.registerForm.email === "") {
                 this.$message("未正确填写邮箱")
                 return
             }
+            this.registerUserName()
+
             getCode(this.registerForm).then(
                 res => {
-                    console.log(res)
                     this.$message('验证码已发送');
                 },
                 err => {
-                    console.log(err)
+
                 }
             )
         }
 
-
         handleRegister() {
-            if (this.registerForm.code === "") {
-                this.$message("未正确填写内容")
+            if (!this.checkRegisterForm(this.registerForm)) {
                 return
             }
             registerAll(this.registerForm).then(
                 res => {
-                    console.log(res)
                     this.$message('注册成功');
                     this.$router.replace({
                         path: "login"
@@ -102,7 +105,28 @@
                 }
             )
         }
-     }
+
+        checkRegisterForm(param: any): boolean {
+            var ok = true
+            if (param.username == null || param.username == "") {
+                ok = false
+                this.$message("未填写用户名")
+            }
+            if (param.password == null || param.password == "") {
+                ok = false
+                this.$message("未填写密码")
+            }
+            if (param.email == null || param.email == "") {
+                ok = false
+                this.$message("未填写邮箱")
+            }
+            if (param.code == null || param.code == "") {
+                ok = false
+                this.$message("未填验证码")
+            }
+            return ok;
+        }
+    }
 </script>
 
 
@@ -112,6 +136,7 @@
         position: relative;
         height: 100%;
         width: 100%;
+
         .register-form {
             position: relative;
             width: 520px;
@@ -120,9 +145,10 @@
             margin: 0 auto;
             overflow: hidden;
 
-            .el-tag{
+            .el-tag {
                 margin-right: 10px;
             }
+
             .svg-container {
                 padding: 6px 5px 6px 15px;
                 color: $darkGray;

@@ -93,6 +93,7 @@
                 {text: 'C++', value: 'cpp'},
             ],
             paste_preprocess: (plugin: any, args: any) => {
+
                 console.log("==========>" + args)
             },
             images_upload_handler: (blobInfo, success, failure) => {
@@ -101,7 +102,6 @@
                 //console.log(blobInfo)
                 formdata.append("file", blobInfo.blob());
                 formdata.append("key", "lixin" + guid() + ".png");
-
                 formdata.append("token", geneToken()); //上传凭证
                 //console.log(blobInfo.blob());
                 let data = this.uploadImage(formdata, success);
@@ -138,7 +138,7 @@
             axios
                 .post('http://upload.qiniup.com/', form)
                 .then((res) => {
-                    success('http://one.ijavascript.club/' + res.data.key);
+                    success('http://cdn.wqsci.com/' + res.data.key);
                     return res.data
                 })
                 .catch(

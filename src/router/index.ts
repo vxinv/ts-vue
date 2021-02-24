@@ -40,32 +40,12 @@ export const constantRoutes: RouteConfig[] = [
             import(/* webpackChunkName: "login" */ "@/views/login/index.vue"),
         meta: {hidden: true}
     },
-
     {
         path: "/register",
         component: () =>
             import(/* webpackChunkName: "login" */ "@/views/login/register.vue"),
         meta: {hidden: true}
     },
-   /* {
-        path: "/",
-        component: Layout,
-        redirect: "/dashboard",
-        children: [
-            {
-                path: "dashboard",
-                component: () =>
-                    import(
-                        /!* webpackChunkName: "dashboard" *!/ "@/views/dashboard/index.vue"
-                        ),
-                name: "Dashboard",
-                meta: {
-                    title: "dashboard",
-                    icon: "dashboard",
-                }
-            }
-        ]
-    },*/
     {
         path: "/",
         component: Layout,
@@ -111,6 +91,8 @@ export const constantRoutes: RouteConfig[] = [
             }
         ]
     },
+
+
     {
         path: "/404",
         component: () =>
