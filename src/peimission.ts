@@ -1,52 +1,56 @@
 import router from "./router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import {Message} from "element-ui";
-import {Route} from "vue-router";
-import {UserModule} from "@/store/modules/user";
-import {PermissionModule} from "@/store/modules/permission";
+import { Message } from "element-ui";
+import { Route, RouteConfig } from "vue-router";
+import { UserModule } from "@/store/modules/user";
+import { PermissionModule } from "@/store/modules/permission";
 
-NProgress.configure({showSpinner: false});
+NProgress.configure({ showSpinner: false });
 
 const whiteList = ["/login"];
 
-
 router.beforeEach(async (to: Route, _: Route, next: any) => {
-    console.log("enter0" + to.fullPath + "->" + _.fullPath)
+
     // Start progress bar
     NProgress.start();
-
     // Determine whether the user has logged in
-    if (to.path === '/register') {
+    if (to.path === '/register'){
         next();
         NProgress.done();
         return
     }
 
     if (UserModule.token != "" && UserModule.token != "out") {
+
         if (to.path === "/login") {
             // If is logged in, redirect to the home page
-            next({path: "/"});
+            next({ path: "/" });
+            console.log("login")
             NProgress.done();
         } else {
-            console.log("enter" + to.fullPath + "->" + _.fullPath + "->" + next)
+            console.log("enter")
             // Note: roles must be a object array! such as: ['admin'] or ['developer', 'editor']
+            console.log(UserModule.roles.entries())
             if (UserModule.roles.length === 0) {
                 try {
                     // Get user info, including roles
                     await UserModule.GetUserInfo();
                     const roles = UserModule.roles;
-                    console.log("enter1")
+                    console.log(roles)
                     // Generate accessible routes map based on role
+
+
                     const accessedRoutes: any = await PermissionModule.GenerateRoutes(
                         ["admin"]
                     );
                     // Dynamically add accessible routes
                     router.addRoutes(accessedRoutes);
                     // Set the replace: true, so the navigation will not leave a history record
-                    next();
+
+                    next({ ...to, replace: true });
                 } catch (err) {
-                    console.log(err);
+                    console.log(err)
                     // Remove token and redirect to login page
                     UserModule.ResetToken();
                     Message.error(err || "Has Error");
@@ -59,7 +63,6 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
         }
     } else {
         // Has no token
-        console.log("enter2" + to.fullPath + "->" + _.fullPath + "->" + next)
         if (whiteList.indexOf(to.path) !== -1) {
             // In the free login whitelist, go directly
             next();

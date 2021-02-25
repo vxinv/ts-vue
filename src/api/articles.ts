@@ -117,7 +117,7 @@ export const uploadString = (content: string, name: string) => {
 
 
 export const uploadFile = (param: any) => {
-    let that = this;
+
     // file就是当前添加的文件
     const _file = param as File
     console.log(param)
@@ -127,7 +127,7 @@ export const uploadFile = (param: any) => {
             params: {},
             mimeType: _file.type
         },
-        //       fname: string，文件原文件名
+        // fname: string，文件原文件名
         // params: object，用来放置自定义变量
         // mimeType: null || array，用来限制上传文件类型，为 null 时表示不对文件类型限制；限制类型放到数组里： ["image/png", "image/jpeg", "image/gif"]
         config = {
@@ -141,8 +141,6 @@ export const uploadFile = (param: any) => {
         console.log(error)
     }
     let complete = (complete: UploadCompleteData) => {
-
-        //that.$message('上传成功')
         /* setTimeout(() => {
              that.percentageNum = 0
          }, 1000)*/

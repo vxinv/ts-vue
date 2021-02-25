@@ -25,7 +25,6 @@
     import 'tinymce/plugins/searchreplace'
     import 'tinymce/plugins/insertdatetime'
     import 'tinymce/plugins/codesample'
-    import 'tinymce/plugins/upfile'
     import 'tinymce/plugins/link'
 
 
@@ -39,6 +38,7 @@
     import {UploadProgress} from "qiniu-js/src/upload/index";
     import {CustomError} from "qiniu-js/src/utils";
     import {UploadCompleteData} from "qiniu-js/src/api";
+    import th from "element-ui/src/locale/lang/th";
 
 
     // 编辑器插件plugins
@@ -117,23 +117,22 @@
             },
 
             file_picker_callback: function (callback, value, meta) {
-                console.log(meta)
+                console.log(meta);
                 var input = document.createElement('input');
                 input.setAttribute('type', 'file');
-                input.setAttribute("accept", "image/*, video/*, audio/*");
+                input.setAttribute("accept", "image/*, video/*, audio/*, */");
 
                 input.onchange = function () {
-                    var file = this.files[0];
+                    var file = this["files"][0];
                     var reader = new FileReader();
                     reader.onload = function () {
-                        uploadFile(file)
-                        console.log(file.name)
-                        callback('myimage.jpg', {title: 'My alt text'});
-                    }
+                        uploadFile(file);
+                        /* call the callback and populate the Title field with the file name */
+                        callback('http://cdn.wqsci.com/'+file.name, {title: file.name});
+                    };
                     reader.readAsDataURL(file);
-                }
+                };
                 input.click();
-                /* call the callback and populate the Title field with the file name */
             },
             init_instance_callback: (editor) => {
                 this.myEdit = editor;
@@ -147,7 +146,7 @@
                     )
                 })
             },
-        }
+        };
 
         uploadImage(form: FormData, success: Function): any {
             axios
@@ -158,7 +157,7 @@
                 })
                 .catch(
                     error => {
-                        error.response
+                        error.response;
                         return error
                     }
                 )
@@ -167,7 +166,7 @@
         uploadFile(param: any) {
             let that = this;
             // file就是当前添加的文件
-            const _file = param.file as File
+            const _file = param.file as File;
             console.log(param)
             const putExtra = {
                     fname: _file.name,
