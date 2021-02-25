@@ -119,7 +119,7 @@ export const uploadString = (content: string, name: string) => {
 export const uploadFile = (param: any) => {
     let that = this;
     // file就是当前添加的文件
-    const _file = param.file as File
+    const _file = param as File
     console.log(param)
 
     const putExtra = {
@@ -135,18 +135,19 @@ export const uploadFile = (param: any) => {
             region: qiniu.region.z0
         }
     let next = (next: UploadProgress) => {
-        that.percentageNum = Number(next.total.percent.toFixed(0))
+        //that.percentageNum = Number(next.total.percent.toFixed(0))
     };
     let error = (error: CustomError) => {
         console.log(error)
     }
     let complete = (complete: UploadCompleteData) => {
-        that.$message('上传成功')
-        setTimeout(() => {
-            that.percentageNum = 0
-        }, 1000)
+
+        //that.$message('上传成功')
+        /* setTimeout(() => {
+             that.percentageNum = 0
+         }, 1000)*/
     }
-    let observable = qiniu.upload(_file, _file.name, this.token, putExtra, config);
+    let observable = qiniu.upload(_file, _file.name, generateToken(), putExtra, config);
 
     observable.subscribe(next, null, complete);
 

@@ -25,12 +25,20 @@
     import 'tinymce/plugins/searchreplace'
     import 'tinymce/plugins/insertdatetime'
     import 'tinymce/plugins/codesample'
-    import {geneToken} from "@/utils/qiniuToken";
+    import 'tinymce/plugins/upfile'
+    import 'tinymce/plugins/link'
+
+
+    import {geneToken, genUpToken} from "@/utils/qiniuToken";
 
     import {token} from "morgan";
     import {guid} from "@/utils/random";
     import axios from "axios";
-    import {GetArticle, getArticleList} from "@/api/articles";
+    import {GetArticle, getArticleList, uploadFile} from "@/api/articles";
+    import * as qiniu from "qiniu-js";
+    import {UploadProgress} from "qiniu-js/src/upload/index";
+    import {CustomError} from "qiniu-js/src/utils";
+    import {UploadCompleteData} from "qiniu-js/src/api";
 
 
     // 编辑器插件plugins
@@ -53,23 +61,18 @@
         @Prop({
             type: Array, //表示是一个string类型的数组
             default() {
-                return ["image media table lists fullscreen code charmap insertdatetime searchreplace codesample "]
+                return ["image media table lists fullscreen code  link charmap insertdatetime searchreplace codesample"]
             }
         }) readonly plugins!: string[];
-=
-        // backcolor  | bold italic underline strikethrough
+
         @Prop({
             type: Array,
             default() {
-                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | numlist bullist | image media table | fontselect fontsizeselect forecolor bold underline| indent outdent | removeformat |"]
+                return ["undo redo | fullscreen code codesample charmap insertdatetime searchreplace | formatselect alignleft aligncenter alignright alignjustify | link | numlist bullist | image media upfile table | fontselect fontsizeselect forecolor backcolor | bold italic underline strikethrough | indent outdent |"]
             }
-        })
-        readonly toolbar: string[];
+        }) readonly toolbar: string[];
 
-        public myValue: string = "<p><span style=\"font-family: 'book antiqua', palatino, serif;\">1 一级标题</span></p>\n" +
-            "<p><span style=\"font-family: 'book antiqua', palatino, serif; font-size: 16pt;\">1 二级标题</span></p>\n" +
-            "<p style=\"padding-left: 40px;\"><span style=\"font-family: 'book antiqua', palatino, serif; font-size: 14pt;\">记录的模版</span><span style=\"font-family: 'book antiqua', palatino, serif; font-size: 14pt;\">&nbsp;</span></p>\n" +
-            "<p style=\"padding-left: 40px;\">&nbsp;</p>";
+        public myValue: string = "<p><span style=\"font-size: 14pt; font-family: 'book antiqua', palatino, serif;\">请书写您的笔记</span></p>";
 
         public tinymceFlag: number = 0;
 
@@ -85,23 +88,18 @@
             //skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`,
             //content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`,
             height: document.documentElement.clientHeight - 60,
-            font_formats: 'Book Antiqua=book antiqua,palatino;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva',
-            fontsize_formats: '14pt 16pt 18pt 20pt',
-            allow_script_urls: true,
             plugins: this.plugins,
             toolbar: this.toolbar,
             paste_data_images: true,
             menubar: false,
             branding: false,
-            //theme:'silver',
             codesample_languages: [
-               /* {text: 'HTML/XML', value: 'markup'},*/
+                {text: 'HTML/XML', value: 'markup'},
                 {text: 'JavaScript', value: 'javascript'},
-               /* {text: 'CSS', value: 'css'},*/
+                {text: 'CSS', value: 'css'},
                 {text: 'Java', value: 'java'},
                 {text: 'C++', value: 'cpp'},
             ],
-            insertdatetime_formats: ["%Y-%m-%d %H:%M"],
             paste_preprocess: (plugin: any, args: any) => {
 
                 console.log("==========>" + args)
@@ -118,18 +116,26 @@
                 console.log(data)
             },
 
+            file_picker_callback: function (callback, value, meta) {
+                console.log(meta)
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute("accept", "image/*, video/*, audio/*");
 
-
-            init_instance_callback: (editor) => {
-                /*if (_this.value) {
-                    editor.setContent(_this.value)
+                input.onchange = function () {
+                    var file = this.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        uploadFile(file)
+                        console.log(file.name)
+                        callback('myimage.jpg', {title: 'My alt text'});
+                    }
+                    reader.readAsDataURL(file);
                 }
-                _this.hasInit = true
-                editor.on('NodeChange Change KeyUp SetContent', () => {
-                    this.hasChange = true
-                    // const val = editor.getContent().replace(/<p><img\s?src="data.*?<\/p>/g, '')
-                    this.$emit('input', editor.getContent())
-                })*/
+                input.click();
+                /* call the callback and populate the Title field with the file name */
+            },
+            init_instance_callback: (editor) => {
                 this.myEdit = editor;
                 editor.on('paste', () => {
                     setTimeout(
@@ -139,24 +145,10 @@
                             })
                         }, 10
                     )
-
                 })
-
             },
-            /*formats:{
-                bold: { selector: 'pre', styles: {'color':'red','font-family': 'terminal, monaco; font-size: 14pt;'} }
-            },*/
-            // 设置默认字体
-            setup: function(editor) {
-                editor.on('init', function(e) {
-                    this.getBody().style.fontSize = '18pt';
-                    //this.getBody().style.color = '#040404';
-                    this.getBody().style.fontFamily = 'book antiqua;';
-                    this.getBody().style.backgroundColor='#fffbf0';
-                });
-            }
-
         }
+
         uploadImage(form: FormData, success: Function): any {
             axios
                 .post('http://upload.qiniup.com/', form)
@@ -172,6 +164,55 @@
                 )
         }
 
+        uploadFile(param: any) {
+            let that = this;
+            // file就是当前添加的文件
+            const _file = param.file as File
+            console.log(param)
+            const putExtra = {
+                    fname: _file.name,
+                    params: {},
+                    mimeType: _file.type
+                },
+                //       fname: string，文件原文件名
+                // params: object，用来放置自定义变量
+                // mimeType: null || array，用来限制上传文件类型，为 null 时表示不对文件类型限制；限制类型放到数组里： ["image/png", "image/jpeg", "image/gif"]
+                config = {
+                    useCdnDomain: true,
+                    region: qiniu.region.z0
+                }
+            let next = (next: UploadProgress) => {
+                //that.percentageNum = Number(next.total.percent.toFixed(0))
+            };
+            let error = (error: CustomError) => {
+                console.log(error)
+            }
+            let complete = (complete: UploadCompleteData) => {
+                that.$message('上传成功')
+                setTimeout(() => {
+                    // that.percentageNum = 0
+                }, 1000)
+            }
+            let observable = qiniu.upload(_file, _file.name, this.created(), putExtra, config);
+
+            observable.subscribe(next, null, complete);
+
+        }
+
+        created() {
+            let token;
+            let policy: any = {};
+            let bucketName = 'myone';
+            let AK = "qEjtRsk220SrirJdrxY6UxBpFW-sbRaLOGzscjT1";
+            let SK = "CTLSJV4Hwe8Xq6gJaUzotYWe5qBv8qly3tWlnxnA";
+            let deadline = Math.round(new Date().getTime() / 1000) + 3600;
+            policy.scope = "myone";
+            policy.deadline = deadline;
+            return token = genUpToken(AK, SK, policy);
+
+        }
+
+
         public clear() {
             this.myValue = "";
         };
@@ -179,7 +220,6 @@
         mounted() {
             console.log("tinymce.init(this.init)")
             tinymce.init(this.init)
-
         }
 
         onClick(event: MessageEvent) {

@@ -54,7 +54,7 @@
     })
     export default class Myedit extends Vue {
         @Ref('editor') editor!: TinymceEditor;
-        msg: string = '请输入内容';
+        // msg: string = '请输入内容';
         disabled: boolean = false;
         // 每周三
         // 每月15
